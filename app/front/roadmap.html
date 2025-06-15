@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generación de Rutas</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body id="roadmap-page">
     <!-- Cabecera -->
     <header class="header">
@@ -33,12 +35,14 @@
             <form id="roadmap-form">
                 <div class="form-group">
                     <label for="learning-goal">¿Qué quieres aprender?</label>
-                    <input type="text" id="learning-goal" name="learning-goal" placeholder="Escribe tu objetivo de aprendizaje..." required>
+                    <input type="text" id="learning-goal" name="learning-goal"
+                        placeholder="Escribe tu objetivo de aprendizaje..." required>
                 </div>
 
                 <div class="form-group">
                     <label for="budget">¿Cuál es tu presupuesto?</label>
-                    <input type="range" id="budget" name="budget" min="0" max="1000" step="0.01" value="0" oninput="updateBudgetValue()">
+                    <input type="range" id="budget" name="budget" min="0" max="1000" step="0.01" value="0"
+                        oninput="updateBudgetValue()">
                     <span id="budget-value">0.00</span>
                 </div>
 
@@ -78,9 +82,10 @@
     </div>
 
     <div class="footer">
-        <p>Hecho con amor para la humanidad. CodeTrail SAC TM CC</p>
+        <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>
     </div>
 
     <script src="js/scripts.js"></script>
 </body>
+
 </html>
