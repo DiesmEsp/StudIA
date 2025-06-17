@@ -47,37 +47,7 @@
     </div>
 
     <script src="js/scripts.js"></script>
-    <script>
-        const $ = go.GraphObject.make;
-
-        const myDiagram = $(go.Diagram, "myDiagramDiv", {
-            layout: $(go.TreeLayout, { angle: 0, layerSpacing: 40 }),
-            "undoManager.isEnabled": true,
-            initialAutoScale: go.Diagram.UniformToFill
-        });
-
-        myDiagram.nodeTemplate = $(
-            go.Node,
-            "Auto",
-            $(go.Shape, "RoundedRectangle", { fill: "lightblue" }),
-            $(go.TextBlock, { margin: 8, font: "bold 14px sans-serif" },
-                new go.Binding("text", "key"))
-        );
-
-        myDiagram.model = new go.TreeModel([
-            { key: "Curso 1", url: "/curso1" },
-            { key: "Curso 2", parent: "Curso 1", url: "/curso2" },
-            { key: "Curso 3", parent: "Curso 1", url: "/curso3" },
-            { key: "Curso 4", parent: "Curso 2", url: "/curso4" }
-        ]);
-
-        myDiagram.addDiagramListener("ObjectSingleClicked", (e) => {
-            const node = e.subject.part;
-            if (node && node.data.url) {
-                window.location.href = node.data.url;
-            }
-        });
-    </script>
+    <script src="js/roadmap.js" defer></script>
 
 </body>
 
