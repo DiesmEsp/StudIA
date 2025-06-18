@@ -133,6 +133,24 @@ def guardar_logs(contenido, duplas, prompt, cursos, nivel, tema):
     except Exception as e:
         print("[Error al guardar logs]:", str(e))
 
+def generar_respuesta(cursos, duplas):
+    ids_usados = {origen for origen, destino in duplas} | {destino for origen, destino in duplas}
+
+    # Mapa código → título
+    codigo_a_titulo = {
+        curso["id"]: curso["titulo"]
+        for curso in cursos
+        if curso["id"] in ids_usados
+    }
+
+    nodes = [{"id": codigo, "titulo": titulo} for codigo, titulo in codigo_a_titulo.items()]
+    edges = duplas  # ya están como [origen, destino] usando códigos
+
+    return {
+        "nodes": nodes,
+        "edges": edges
+    }
+
 # === Ruta principal ===
 @app.route("/generar-roadmap", methods=["POST"])
 def generar_roadmap():
@@ -160,6 +178,8 @@ def generar_roadmap():
         contenido_limpio = re.sub(r"```json|```", "", contenido).strip()
         duplas = json.loads(contenido_limpio)
 
+        respuesta = generar_respuesta(cursos, duplas)
+
         # Guardado en segundo plano
         threading.Thread(
             target=guardar_logs,
@@ -167,7 +187,7 @@ def generar_roadmap():
             daemon=True
         ).start()
 
-        return jsonify({"aristas": duplas})
+        return jsonify(respuesta)  # Devuelves nodes y edges
 
     except json.JSONDecodeError as e:
         return jsonify({"error": "La respuesta del modelo no es JSON válido", "detalle": str(e)}), 500
