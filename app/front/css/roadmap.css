@@ -64,7 +64,7 @@ h1 {
 }
 
 .access-button {
-    background-color: #4CAF50;
+    background-color: #005a9c;
     color: white;
     border: none;
     padding: 10px 30px;
@@ -75,7 +75,7 @@ h1 {
 }
 
 .access-button:hover {
-    background-color: #45a049;
+    background-color: #005a9c;
 }
 
 /* ============ CONTENEDOR PRINCIPAL ============ */
@@ -136,7 +136,7 @@ h1 {
 
 .roadmap-generate-button {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #005a9c;
     color: white;
     /* font-weight: bold; */
     font-size: 16px;
@@ -149,7 +149,7 @@ h1 {
 }
 
 .roadmap-generate-button:hover {
-    background-color: #43a047;
+    background-color: #005a9c;
 }
 
 #myDiagramDiv {

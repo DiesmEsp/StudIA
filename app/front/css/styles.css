@@ -61,7 +61,7 @@ h1 {
 }
 
 .access-button {
-    background-color: #4CAF50;
+    background-color: #005a9c;
     color: white;
     border: none;
     padding: 10px 30px;
@@ -141,7 +141,8 @@ h1 {
     margin-bottom: 5px;
 }
 
-#roadmap-page .form-group input, #roadmap-page textarea {
+#roadmap-page .form-group input,
+#roadmap-page textarea {
     width: 100%;
     padding: 10px;
     font-size: 14px;
@@ -166,20 +167,26 @@ h1 {
 
 #roadmap-page .radio-group {
     display: flex;
-    flex-wrap: wrap;  /* Permite que las casillas se ajusten si es necesario */
-    gap: 15px;  /* Espacio entre las casillas */
+    flex-wrap: wrap;
+    /* Permite que las casillas se ajusten si es necesario */
+    gap: 15px;
+    /* Espacio entre las casillas */
 }
 
 #roadmap-page .radio-group input {
-    margin-right: 5px;  /* Alineación ajustada de las casillas */
-    margin-bottom: 0;  /* Evita margen extra en la parte inferior */
+    margin-right: 5px;
+    /* Alineación ajustada de las casillas */
+    margin-bottom: 0;
+    /* Evita margen extra en la parte inferior */
 }
 
 #roadmap-page .radio-group label {
     display: inline-block;
     font-size: 14px;
-    margin-right: 15px;  /* Espacio adecuado entre casilla y texto */
-    margin-bottom: 0;  /* Evita margen extra en la parte inferior */
+    margin-right: 15px;
+    /* Espacio adecuado entre casilla y texto */
+    margin-bottom: 0;
+    /* Evita margen extra en la parte inferior */
 }
 
 #roadmap-page .form-group button {
