@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Cursos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body id="course-list-page">
+    <!-- Cabecera -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
+            <h1>StudIA</h1>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Buscar">
+            <img src="images/lupa.png" alt="Buscar" class="lupa">
+        </div>
+        <button class="access-button">Perfil</button>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="container">
+        <div class="left-side">
+            <h2>¡Los mejores cursos de programación en un solo lugar!</h2>
+            <select id="sort-options">
+                <option value="most-popular">Más populares</option>
+                <option value="least-popular">Menos populares</option>
+                <option value="most-recent">Más recientes</option>
+                <option value="least-recent">Menos recientes</option>
+            </select>
+
+            <div id="course-list">
+                <!-- Los cursos se cargarán aquí -->
+            </div>
+
+            <button id="load-more">Mostrar más cursos</button>
+        </div>
+        <div class="right-side"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>
+    </div>
+
+    <script src="js/scripts.js" defer></script>
+</body>
+
+</html>

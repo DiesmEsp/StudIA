@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generación de Rutas</title>
+    <link rel="stylesheet" href="css/roadmap.css" />
+    <script src="https://unpkg.com/gojs/release/go.js"></script>
+</head>
+
+<body>
+    <!-- Cabecera -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="images/logo_studia.png" alt="StudIA Logo" class="logo" />
+            <h1>StudIA</h1>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Buscar" />
+            <img src="images/lupa.png" alt="Buscar" class="lupa" />
+        </div>
+        <button class="access-button">Perfil</button>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="container">
+        <div class="roadmap-new-container">
+            <div class="roadmap-controls">
+                <input type="text" class="roadmap-input" placeholder="El tema del roadmap es..." />
+                <select class="roadmap-select">
+                    <option value="minimalista" selected>Minimalista</option>
+                    <option value="detallado">Detallado</option>
+                </select>
+                <button class="roadmap-generate-button">Generar ruta</button>
+            </div>
+
+            <div class="roadmap-canvas-space">
+                <div id="myDiagramDiv"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>
+    </div>
+
+    <script src="js/scripts.js"></script>
+    <script src="js/roadmap.js" defer></script>
+
+</body>
+
+</html>
