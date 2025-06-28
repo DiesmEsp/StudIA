@@ -1,3 +1,48 @@
+// Configurar diagrama GoJS reutilizable
+const $ = go.GraphObject.make;
+
+let myDiagram = $(go.Diagram, "myDiagramDiv", {
+    layout: $(go.TreeLayout, { angle: 0, layerSpacing: 40 }),
+    "undoManager.isEnabled": false,
+    "allowMove": false,
+    "allowLink": false,
+    "allowRelink": false,
+    "allowDelete": false,
+    "allowInsert": false,
+    initialAutoScale: go.Diagram.UniformToFill
+});
+
+// Ahora usamos el campo "titulo" para mostrar en el nodo
+myDiagram.nodeTemplate = $(
+    go.Node, "Auto",
+    {
+        cursor: "pointer",
+        mouseEnter: (e, obj) => {
+            const shape = obj.findObject("SHAPE");
+            if (shape) shape.fill = "#76bdd5";
+        },
+        mouseLeave: (e, obj) => {
+            const shape = obj.findObject("SHAPE");
+            if (shape) shape.fill = "#add8e6";
+        }
+    },
+    $(
+        go.Shape, "RoundedRectangle",
+        { name: "SHAPE", fill: "lightblue", stroke: "#333" }
+    ),
+    $(
+        go.TextBlock,
+        { margin: 8, font: "bold 14px sans-serif" },
+        new go.Binding("text", "titulo") // Ahora mostramos el título
+    )
+);
+
+// Spinner y contenedor del diagrama
+const spinner = document.getElementById("loadingSpinner");
+const diagramDiv = document.getElementById("myDiagramDiv");
+const placeholder = document.getElementById("roadmapPlaceholder");
+
+// Añadir listener para el evento de carga del diagrama
 document.querySelector(".roadmap-generate-button").addEventListener("click", async () => {
     const tema = document.querySelector(".roadmap-input").value.trim();
     const nivel = document.querySelector(".roadmap-select").value;
@@ -12,7 +57,15 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
         nivel: nivel
     };
 
+    let hayResultados = false;
+
     try {
+        // Mostrar el spinner y ocultar el diagrama y el placeholder
+        spinner.style.display = "block";
+        diagramDiv.style.display = "none";
+        placeholder.style.display = "none";
+
+        // Enviar la petición al servidor
         console.log("Enviando request al servidor...");
         const response = await fetch("http://127.0.0.1:5000/generar-roadmap", {
             method: "POST",
@@ -38,6 +91,14 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
 
         const nodosGoJS = [];
 
+        // Validar si el resultado está vacío
+        if (nodes.length === 0 || edges.length === 0) {
+            alert("No se encontraron resultados para este tema. Prueba con otro término más técnico o específico.");
+            return;
+        }
+
+        hayResultados = true;
+
         // Primero, los nodos con key y título
         nodes.forEach(n => {
             nodosGoJS.push({
@@ -54,47 +115,11 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
             }
         });
 
-        // Configurar GoJS como antes
-        const $ = go.GraphObject.make;
-
-        const myDiagram = $(go.Diagram, "myDiagramDiv", {
-            layout: $(go.TreeLayout, { angle: 0, layerSpacing: 40 }),
-            "undoManager.isEnabled": false,
-            "allowMove": false,
-            "allowLink": false,
-            "allowRelink": false,
-            "allowDelete": false,
-            "allowInsert": false,
-            initialAutoScale: go.Diagram.UniformToFill
-        });
-
-        // Ahora usamos el campo "titulo" para mostrar en el nodo
-        myDiagram.nodeTemplate = $(
-            go.Node, "Auto",
-            {
-                cursor: "pointer",
-                mouseEnter: (e, obj) => {
-                    const shape = obj.findObject("SHAPE");
-                    if (shape) shape.fill = "#76bdd5";
-                },
-                mouseLeave: (e, obj) => {
-                    const shape = obj.findObject("SHAPE");
-                    if (shape) shape.fill = "#add8e6";
-                }
-            },
-            $(
-                go.Shape, "RoundedRectangle",
-                { name: "SHAPE", fill: "lightblue", stroke: "#333" }
-            ),
-            $(
-                go.TextBlock,
-                { margin: 8, font: "bold 14px sans-serif" },
-                new go.Binding("text", "titulo") // Ahora mostramos el título
-            )
-        );
-
         // Pintamos el grafo
         myDiagram.model = new go.TreeModel(nodosGoJS);
+
+        // Eliminar cualquier listener anterior para evitar duplicados
+        myDiagram.removeDiagramListener("ObjectSingleClicked");
 
         // Comportamiento al hacer clic
         myDiagram.addDiagramListener("ObjectSingleClicked", (e) => {
@@ -109,89 +134,20 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
 
     } catch (err) {
         console.error("Error inesperado en la petición:", err);
+    } finally {
+        if (hayResultados) {
+            // Si hay resultados, ocultar el spinner y mostrar el diagrama
+            spinner.style.display = "none";
+            diagramDiv.style.display = "block";
+            placeholder.style.display = "none";
+        }
+        else {
+            // Si no hay resultados, ocultar el spinner y mostrar el placeholder
+            spinner.style.display = "none";
+            diagramDiv.style.display = "none";
+            placeholder.style.display = "flex";
+        }
     }
 });
 
 
-
-// const $ = go.GraphObject.make;
-
-// const myDiagram = $(go.Diagram, "myDiagramDiv", {
-//     layout: $(go.TreeLayout, { angle: 0, layerSpacing: 40 }),
-
-//     "undoManager.isEnabled": false, // Desactiva ctrl+z y acciones reversibles
-//     "allowMove": false,             // No permite mover nodos
-//     "allowLink": false,             // No permite crear enlaces
-//     "allowRelink": false,           // No permite cambiar conexiones
-//     "allowDelete": false,           // No permite eliminar elementos
-//     "allowInsert": false,           // No permite agregar nodos manualmente
-
-//     initialAutoScale: go.Diagram.UniformToFill
-// });
-
-// // Define el template de los nodos
-// myDiagram.nodeTemplate = $(
-//     go.Node, "Auto",
-//     {
-//         // Cambiar el cursor al pasar el mouse
-//         cursor: "pointer",
-//         mouseEnter: (e, obj) => {
-//             const shape = obj.findObject("SHAPE");
-//             if (shape) shape.fill = "#76bdd5"; // azul más claro
-//         },
-//         mouseLeave: (e, obj) => {
-//             const shape = obj.findObject("SHAPE");
-//             if (shape) shape.fill = "#add8e6"; // color original
-//         }
-//     },
-//     $(
-//         go.Shape,
-//         "RoundedRectangle",
-//         {
-//             name: "SHAPE", // Necesario para poder encontrarlo y cambiar el color
-//             fill: "lightblue",
-//             stroke: "#333"
-//         }
-//     ),
-//     $(
-//         go.TextBlock,
-//         { margin: 8, font: "bold 14px sans-serif" },
-//         new go.Binding("text", "key")
-//     )
-// );
-
-// // Cambiar: ahora usamos id en vez de url
-// myDiagram.model = new go.TreeModel([
-//     { key: "Curso 1", id: 1 },
-//     { key: "Curso 2", parent: "Curso 1", id: 2 },
-//     { key: "Curso 3", parent: "Curso 1", id: 3 },
-//     { key: "Curso 4", parent: "Curso 2", id: 4 }
-// ]);
-
-// // Nuevo comportamiento al hacer clic: construir URL dinámica y abrir nueva pestaña
-// myDiagram.addDiagramListener("ObjectSingleClicked", (e) => {
-//     const node = e.subject.part;
-//     if (node && node.data.id) {
-//         const id = node.data.id;
-//         const url = `/getCurso/${id}`;
-//         window.open(url, "_blank"); // Abrir en nueva pestaña
-//     }
-// });
-
-
-
-// // PRUEBA
-// document.querySelector(".roadmap-generate-button").addEventListener("click", async () => {
-//     const tema = document.querySelector(".roadmap-input").value.trim();
-//     const nivel = document.querySelector(".roadmap-select").value;
-
-//     const res = await fetch("http://127.0.0.1:5000/generar-roadmap", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ tema, nivel }),
-//         mode: "cors"
-//     });
-
-//     const data = await res.json();
-//     console.log("OK:", data);
-// });
