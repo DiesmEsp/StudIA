@@ -3,6 +3,10 @@ import re
 import json
 import sqlite3
 import networkx as nx
+
+import matplotlib
+matplotlib.use('Agg')  # 👈 evita errores de GUI en servidores
+
 import matplotlib.pyplot as plt
 import threading
 from flask import Flask, request, jsonify
@@ -127,7 +131,12 @@ def guardar_logs(contenido, duplas, prompt, cursos, nivel, tema):
         nx.draw(G, pos, with_labels=True, node_color="lightgreen", node_size=3000, font_size=9, arrows=True)
         plt.title(f"ROADMAP {nivel.upper()} - {tema.upper()}", fontsize=16)
         plt.tight_layout()
-        plt.savefig(LAST_GRAPH_PATH, dpi=300)
+
+        try:
+            plt.savefig(LAST_GRAPH_PATH, dpi=300)
+        except Exception as e:
+            print("No se pudo guardar el gráfico:", str(e))
+
         plt.close()
 
     except Exception as e:
