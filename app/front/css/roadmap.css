@@ -137,7 +137,7 @@ h1 {
     /* para que el spinner se posicione relativo a este contenedor */
 }
 
-.loading-spinner {
+/* .loading-spinner {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -148,6 +148,32 @@ h1 {
     text-align: center;
     box-shadow: 0 0 10px #aaa;
     z-index: 10;
+} */
+
+.roadmap-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px dashed #ccc;
+    background-color: #f9f9f9;
+    color: #555;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Segoe UI", sans-serif;
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
+    /* ⚠️ Que tome todo el alto disponible */
+    padding: 20px;
+    box-sizing: border-box;
+
+    position: absolute;
+    /* Para superponer igual que el spinner */
+    top: 0;
+    left: 0;
 }
 
 .roadmap-generate-button {

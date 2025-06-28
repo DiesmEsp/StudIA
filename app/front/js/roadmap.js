@@ -40,6 +40,7 @@ myDiagram.nodeTemplate = $(
 // Spinner y contenedor del diagrama
 const spinner = document.getElementById("loadingSpinner");
 const diagramDiv = document.getElementById("myDiagramDiv");
+const placeholder = document.getElementById("roadmapPlaceholder");
 
 // Añadir listener para el evento de carga del diagrama
 document.querySelector(".roadmap-generate-button").addEventListener("click", async () => {
@@ -56,10 +57,13 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
         nivel: nivel
     };
 
+    let hayResultados = false;
+
     try {
-        // Mostrar spinner, ocultar diagrama
+        // Mostrar el spinner y ocultar el diagrama y el placeholder
         spinner.style.display = "block";
         diagramDiv.style.display = "none";
+        placeholder.style.display = "none";
 
         // Enviar la petición al servidor
         console.log("Enviando request al servidor...");
@@ -86,6 +90,14 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
         const edges = data.edges;  // [["C1", "C2"], ["C1", "C3"]]
 
         const nodosGoJS = [];
+
+        // Validar si el resultado está vacío
+        if (nodes.length === 0 || edges.length === 0) {
+            alert("No se encontraron resultados para este tema. Prueba con otro término más técnico o específico.");
+            return;
+        }
+
+        hayResultados = true;
 
         // Primero, los nodos con key y título
         nodes.forEach(n => {
@@ -123,9 +135,18 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
     } catch (err) {
         console.error("Error inesperado en la petición:", err);
     } finally {
-        // ... cuando termine la carga y se pinte el diagrama
-        spinner.style.display = "none";
-        diagramDiv.style.display = "block";
+        if (hayResultados) {
+            // Si hay resultados, ocultar el spinner y mostrar el diagrama
+            spinner.style.display = "none";
+            diagramDiv.style.display = "block";
+            placeholder.style.display = "none";
+        }
+        else {
+            // Si no hay resultados, ocultar el spinner y mostrar el placeholder
+            spinner.style.display = "none";
+            diagramDiv.style.display = "none";
+            placeholder.style.display = "flex";
+        }
     }
 });
 

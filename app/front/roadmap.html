@@ -36,10 +36,19 @@
             </div>
 
             <div class="roadmap-canvas-space">
+                <!-- Spinner de carga -->
                 <div class="loading-spinner" id="loadingSpinner" style="display: none;">
                     <img src="images/loading.gif" alt="Cargando..." />
                 </div>
-                <div id="myDiagramDiv"></div>
+
+                <!-- Placeholder inicial -->
+                <div id="roadmapPlaceholder" class="roadmap-placeholder">
+                    <p>🧭 Tu roadmap aparecerá aquí.</p>
+                </div>
+
+
+                <!-- Diagrama de GoJS -->
+                <div id="myDiagramDiv" style="display: none;"></div>
             </div>
 
         </div>
