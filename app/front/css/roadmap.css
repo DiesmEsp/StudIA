@@ -132,6 +132,22 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    position: relative;
+    /* para que el spinner se posicione relativo a este contenedor */
+}
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px #aaa;
+    z-index: 10;
 }
 
 .roadmap-generate-button {

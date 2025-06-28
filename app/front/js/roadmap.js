@@ -1,4 +1,4 @@
-// Configurar GoJS como antes
+// Configurar diagrama GoJS reutilizable
 const $ = go.GraphObject.make;
 
 let myDiagram = $(go.Diagram, "myDiagramDiv", {
@@ -37,6 +37,11 @@ myDiagram.nodeTemplate = $(
     )
 );
 
+// Spinner y contenedor del diagrama
+const spinner = document.getElementById("loadingSpinner");
+const diagramDiv = document.getElementById("myDiagramDiv");
+
+// Añadir listener para el evento de carga del diagrama
 document.querySelector(".roadmap-generate-button").addEventListener("click", async () => {
     const tema = document.querySelector(".roadmap-input").value.trim();
     const nivel = document.querySelector(".roadmap-select").value;
@@ -52,6 +57,11 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
     };
 
     try {
+        // Mostrar spinner, ocultar diagrama
+        spinner.style.display = "block";
+        diagramDiv.style.display = "none";
+
+        // Enviar la petición al servidor
         console.log("Enviando request al servidor...");
         const response = await fetch("http://127.0.0.1:5000/generar-roadmap", {
             method: "POST",
@@ -112,6 +122,10 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
 
     } catch (err) {
         console.error("Error inesperado en la petición:", err);
+    } finally {
+        // ... cuando termine la carga y se pinte el diagrama
+        spinner.style.display = "none";
+        diagramDiv.style.display = "block";
     }
 });
 
