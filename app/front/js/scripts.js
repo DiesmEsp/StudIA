@@ -1,20 +1,20 @@
-// Validación de formulario en la página de inicio de sesión
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-    loginForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        let email = document.getElementById("email").value;
-        let password = document.getElementById("password").value;
-        
-        // Validación simple (puedes agregar más validaciones aquí)
-        if(email && password) {
-            alert("Formulario enviado con éxito!");
-        } else {
-            alert("Por favor, completa todos los campos.");
-        }
-    });
-}
+// // Validación de formulario en la página de inicio de sesión
+// const loginForm = document.getElementById("login-form");
+// if (loginForm) {
+//     loginForm.addEventListener("submit", function(event) {
+//         event.preventDefault();
+
+//         let email = document.getElementById("email").value;
+//         let password = document.getElementById("password").value;
+
+//         // Validación simple (puedes agregar más validaciones aquí)
+//         if(email && password) {
+//             alert("Formulario enviado con éxito!");
+//         } else {
+//             alert("Por favor, completa todos los campos.");
+//         }
+//     });
+// }
 
 // Actualiza el valor de presupuesto cuando se mueve la barra
 function updateBudgetValue() {
@@ -25,7 +25,7 @@ function updateBudgetValue() {
 // Mostrar campo de detalles cuando se selecciona "Soy Nuevo"
 const newCheckbox = document.getElementById('new');
 if (newCheckbox) {
-    newCheckbox.addEventListener('change', function() {
+    newCheckbox.addEventListener('change', function () {
         var detailsField = document.getElementById('knowledge-details');
         if (this.checked) {
             detailsField.style.display = 'block';
@@ -41,11 +41,11 @@ if (addToCartBtn) {
     // Guarda el precio real en un atributo data
     addToCartBtn.dataset.price = addToCartBtn.textContent;
 
-    addToCartBtn.addEventListener("mouseover", function() {
+    addToCartBtn.addEventListener("mouseover", function () {
         this.textContent = "Añadir al Carrito";
     });
 
-    addToCartBtn.addEventListener("mouseout", function() {
+    addToCartBtn.addEventListener("mouseout", function () {
         this.textContent = this.dataset.price;
     });
 }
@@ -78,16 +78,16 @@ function loadCourseData(courseData) {
         if (pdfBtn) {
             if (courseData.pdf) {
                 pdfBtn.style.display = "inline-block";
-                pdfBtn.onclick = function() {
-                window.open(courseData.pdf, "_blank");
-            };
+                pdfBtn.onclick = function () {
+                    window.open(courseData.pdf, "_blank");
+                };
             } else {
                 pdfBtn.style.display = "none";
             }
         }
     } else {
         // Mostrar ventana emergente si no hay enlace al PDF
-        document.getElementById("pdf-btn").onclick = function() {
+        document.getElementById("pdf-btn").onclick = function () {
             showPopup();  // Llamamos la función para mostrar el popup
         };
     }
@@ -130,9 +130,9 @@ if (document.getElementById("course-img")) {
 }
 
 // Lista de cursos
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM completamente cargado - Iniciando script");
-    
+
     // Datos de ejemplo
     const courses = [
         { title: 'JavaScript', description: 'Aprende JS desde cero', creationDate: '2023-01-01', rating: 4.5 },
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCourses(coursesToRender) {
         courseList.innerHTML = '';
         coursesToRender.forEach(course => {
-            const randomColor = Math.floor(Math.random()*16777215).toString(16);
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
             courseList.innerHTML += `
                 <div class="course-item">
                     <div class="circle" style="background-color: #${randomColor}"></div>
@@ -219,10 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCourses(courses.slice(0, 10));
 
     // Evento para ordenar
-    sortOptions.addEventListener('change', function(e) {
+    sortOptions.addEventListener('change', function (e) {
         const sortedCourses = [...courses];
         const option = e.target.value;
-        
+
         if (option === 'most-popular') {
             sortedCourses.sort((a, b) => b.rating - a.rating);
         } else if (option === 'least-popular') {
@@ -232,16 +232,16 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (option === 'least-recent') {
             sortedCourses.sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate));
         }
-        
+
         renderCourses(sortedCourses);
     });
 
     // Evento para "Mostrar más"
-    loadMoreBtn.addEventListener('click', function() {
+    loadMoreBtn.addEventListener('click', function () {
         const currentCount = document.querySelectorAll('.course-item').length;
         const moreCourses = courses.slice(currentCount, currentCount + 10);
         moreCourses.forEach(course => {
-            const randomColor = Math.floor(Math.random()*16777215).toString(16);
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
             courseList.innerHTML += `
                 <div class="course-item">
                     <div class="circle" style="background-color: #${randomColor}"></div>

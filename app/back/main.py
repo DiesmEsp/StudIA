@@ -221,7 +221,12 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"error": "Faltan campos obligatorios"}), 400
+        return jsonify({"success": False, "mensaje": "Faltan campos obligatorios"}), 400
+    
+    EMAIL_REGEX = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    
+    if not re.match(EMAIL_REGEX, email):
+        return jsonify({"success": False, "mensaje": "Correo electrónico no válido."}), 400
 
     try:
         conn = get_db_connection()
@@ -231,7 +236,7 @@ def login():
         conn.close()
 
         if user is None or user["password"] != password:
-            return jsonify({"error": "Usuario y/o contraseña incorrectos"}), 401
+            return jsonify({"success": False, "mensaje": "Usuario y/o contraseña incorrectos"}), 401
 
         return jsonify({
             "success": True,
@@ -241,7 +246,7 @@ def login():
 
     except Exception as e:
         print("[Error en login]:", str(e))
-        return jsonify({"error": "Error interno del servidor"}), 500
+        return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
 
 # === Endpoint para registrar un nuevo usuario ===
 @app.route("/api/registro", methods=["POST"])
