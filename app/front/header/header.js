@@ -9,9 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (datos && datos.nombre) {
                 contenedor.innerHTML = `
+                    <button class="carrito-btn" title="Ir al carrito" onclick="location.href='/carrito.html'">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+
                     <div class="usuario-bienvenida">
                         <span>👋 ¡Hola, <strong>${datos.nombre}</strong>!</span>
-                        <button id="cerrarSesionBtn" class="logout-btn" title="Cerrar sesión">🚪</button>
+                        <button id="cerrarSesionBtn" class="logout-btn" title="Cerrar sesión">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
                     </div>
                 `;
 
