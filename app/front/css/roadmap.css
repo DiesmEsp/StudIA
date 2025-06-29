@@ -78,6 +78,29 @@ h1 {
     background-color: #45a049;
 }
 
+.usuario-bienvenida {
+    background: #f0f8ff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: background 0.3s;
+}
+
+.usuario-bienvenida:hover {
+    background: #e0f0ff;
+}
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
 /* ============ CONTENEDOR PRINCIPAL ============ */
 .container {
     display: flex;
