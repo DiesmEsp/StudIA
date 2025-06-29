@@ -8,8 +8,8 @@ Este archivo enumera los endpoints que aún deben implementarse, agrupados por l
 
 | Endpoint                         | Descripción                                      | Página relacionada     |
 |----------------------------------|--------------------------------------------------|-------------------------|
-| [ ] `POST /api/registro`             | Crear nuevo usuario                              | `registro.html`         |
-| [ ] `POST /api/login`                | Validar credenciales y devolver info del usuario | `inicio_sesion.html`    |
+| [x] `POST /api/registro`             | Crear nuevo usuario                              | `registro.html`         |
+| [x] `POST /api/login`                | Validar credenciales y devolver info del usuario | `inicio_sesion.html`    |
 | [ ] `GET /api/cursos`                | Listar todos los cursos                          | `course_list.html`      |
 | [ ] `GET /api/compras/{usuario_id}`  | Ver lista de cursos comprados por el usuario     | `course_list.html`      |
 | [ ] `GET /api/curso/{id}`            | Obtener detalles de un curso específico          | `course_info.html`      |
