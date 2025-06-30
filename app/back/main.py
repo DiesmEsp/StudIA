@@ -354,7 +354,60 @@ def listar_cursos():
     finally:
         conn.close()
 
+# === Endpoint para obtener el detalle de un curso ===
+@app.route("/api/curso/<int:id>", methods=["GET"])
+def obtener_detalle_curso(id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
+        # Buscar datos del curso
+        cursor.execute("""
+            SELECT id, codigo, titulo, descripcion, nivel, duracion,
+                   precio, DATE(fecha_creacion) AS fecha_creacion,
+                   rating_promedio, activo
+            FROM cursos
+            WHERE id = ?
+        """, (id,))
+        curso = cursor.fetchone()
+
+        if curso is None:
+            return jsonify({
+                "success": False,
+                "mensaje": f"Curso con ID {id} no encontrado."
+            }), 404
+
+        # Buscar temas asociados al curso
+        cursor.execute("""
+            SELECT tema FROM curso_temas WHERE curso_id = ?
+        """, (id,))
+        temas = [row["tema"] for row in cursor.fetchall()]
+
+        return jsonify({
+            "success": True,
+            "curso": {
+                "id": curso["id"],
+                "codigo": curso["codigo"],
+                "titulo": curso["titulo"],
+                "descripcion": curso["descripcion"],
+                "nivel": curso["nivel"],
+                "duracion": curso["duracion"],
+                "precio": curso["precio"],
+                "fecha_creacion": curso["fecha_creacion"],
+                "rating_promedio": curso["rating_promedio"],
+                "activo": bool(curso["activo"]),
+                "temas": temas
+            }
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "mensaje": f"Error interno: {str(e)}"
+        }), 500
+
+    finally:
+        conn.close()
 
 
 # === Iniciar la app ===
