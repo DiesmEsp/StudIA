@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     nombre: data.nombre
                 }));
 
+                // Mostrar mensaje de éxito
+                alert("Inicio de sesión exitoso. Bienvenido!");
+
                 // Redirigir al inicio
                 window.location.href = "/index.html";
             } else {
