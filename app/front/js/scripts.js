@@ -18,8 +18,10 @@
 
 // Actualiza el valor de presupuesto cuando se mueve la barra
 function updateBudgetValue() {
-    var budget = document.getElementById('budget').value;
-    document.getElementById('budget-value').textContent = parseFloat(budget).toFixed(2);
+    var budget = document.getElementById('budget')?.value;
+    if (budget && document.getElementById('budget-value')) {
+        document.getElementById('budget-value').textContent = parseFloat(budget).toFixed(2);
+    }
 }
 
 // Mostrar campo de detalles cuando se selecciona "Soy Nuevo"
@@ -27,10 +29,8 @@ const newCheckbox = document.getElementById('new');
 if (newCheckbox) {
     newCheckbox.addEventListener('change', function () {
         var detailsField = document.getElementById('knowledge-details');
-        if (this.checked) {
-            detailsField.style.display = 'block';
-        } else {
-            detailsField.style.display = 'none';
+        if (detailsField) {
+            detailsField.style.display = this.checked ? 'block' : 'none';
         }
     });
 }
@@ -38,13 +38,10 @@ if (newCheckbox) {
 // Función para cambiar el texto del botón al pasar el puntero por encima
 const addToCartBtn = document.getElementById("add-to-cart");
 if (addToCartBtn) {
-    // Guarda el precio real en un atributo data
     addToCartBtn.dataset.price = addToCartBtn.textContent;
-
     addToCartBtn.addEventListener("mouseover", function () {
         this.textContent = "Añadir al Carrito";
     });
-
     addToCartBtn.addEventListener("mouseout", function () {
         this.textContent = this.dataset.price;
     });
@@ -67,39 +64,32 @@ function loadCourseData(courseData) {
     if (imgElem) imgElem.src = courseImage;
     if (btnElem) {
         btnElem.textContent = coursePrice;
-        btnElem.dataset.price = coursePrice; // Actualiza el atributo data con el precio correcto
+        btnElem.dataset.price = coursePrice;
     }
     if (nameElem) nameElem.textContent = courseName;
     if (descElem) descElem.textContent = courseDescription;
 
     // Configuración del botón PDF
-    if (pdfLink) {
-        const pdfBtn = document.getElementById("pdf-btn");
-        if (pdfBtn) {
-            if (courseData.pdf) {
-                pdfBtn.style.display = "inline-block";
-                pdfBtn.onclick = function () {
-                    window.open(courseData.pdf, "_blank");
-                };
-            } else {
-                pdfBtn.style.display = "none";
-            }
+    const pdfBtn = document.getElementById("pdf-btn");
+    if (pdfBtn) {
+        if (pdfLink) {
+            pdfBtn.style.display = "inline-block";
+            pdfBtn.onclick = function () {
+                window.open(pdfLink, "_blank");
+            };
+        } else {
+            pdfBtn.style.display = "inline-block";
+            pdfBtn.onclick = function () {
+                showPopup();
+            };
         }
-    } else {
-        // Mostrar ventana emergente si no hay enlace al PDF
-        document.getElementById("pdf-btn").onclick = function () {
-            showPopup();  // Llamamos la función para mostrar el popup
-        };
     }
 }
 
 // Función para mostrar la ventana emergente
 function showPopup() {
-    // Crear el contenedor emergente
     const popup = document.createElement('div');
-    popup.className = 'popup'; // Usamos la clase popup
-
-    // Agregar contenido al popup
+    popup.className = 'popup';
     popup.innerHTML = `
         <div class="popup-content">
             <img src="images/ups.png" alt="Ups" class="popup-img">
@@ -107,17 +97,16 @@ function showPopup() {
             <button class="popup-btn" onclick="closePopup()">Ok</button>
         </div>
     `;
-    document.body.appendChild(popup);  // Añadimos el popup al body
+    document.body.appendChild(popup);
 }
 
 // Función para cerrar el popup
 function closePopup() {
-    const popup = document.querySelector('.popup');  // Seleccionamos el popup
-    if (popup) {
-        popup.remove();  // Lo eliminamos del DOM
-    }
+    const popup = document.querySelector('.popup');
+    if (popup) popup.remove();
 }
 
+/*
 // Esta función se llamará cuando tengamos los datos del JSON
 if (document.getElementById("course-img")) {
     loadCourseData({
@@ -128,133 +117,123 @@ if (document.getElementById("course-img")) {
         pdf: null
     });
 }
+*/
 
-// Lista de cursos
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("DOM completamente cargado - Iniciando script");
+// ===================== LÓGICA POR PÁGINA =====================
 
-    // Datos de ejemplo
-    const courses = [
-        { title: 'JavaScript', description: 'Aprende JS desde cero', creationDate: '2023-01-01', rating: 4.5 },
-        { title: 'Python', description: 'Curso completo de Python', creationDate: '2023-02-15', rating: 4.2 },
-        { title: 'React', description: 'Aprende React profesional', creationDate: '2023-03-10', rating: 4.7 },
-        { title: 'Node.js', description: 'Backend con Node.js y Express', creationDate: '2023-04-05', rating: 4.6 },
-        { title: 'HTML5 y CSS3', description: 'Diseño web moderno', creationDate: '2023-05-12', rating: 4.4 },
-        { title: 'Angular', description: 'Desarrollo de aplicaciones con Angular', creationDate: '2023-06-01', rating: 4.3 },
-        { title: 'Vue.js', description: 'Curso práctico de Vue.js', creationDate: '2023-06-20', rating: 4.5 },
-        { title: 'TypeScript', description: 'Domina TypeScript desde cero', creationDate: '2023-07-10', rating: 4.6 },
-        { title: 'Java', description: 'Programación orientada a objetos con Java', creationDate: '2023-07-25', rating: 4.4 },
-        { title: 'C#', description: 'Desarrollo de aplicaciones con C#', creationDate: '2023-08-05', rating: 4.3 },
-        { title: 'PHP', description: 'Desarrollo web con PHP y MySQL', creationDate: '2023-08-18', rating: 4.2 },
-        { title: 'Ruby on Rails', description: 'Web apps con Ruby on Rails', creationDate: '2023-09-01', rating: 4.1 },
-        { title: 'Swift', description: 'Desarrollo iOS con Swift', creationDate: '2023-09-15', rating: 4.5 },
-        { title: 'Kotlin', description: 'Apps Android con Kotlin', creationDate: '2023-10-01', rating: 4.4 },
-        { title: 'Flutter', description: 'Apps móviles con Flutter y Dart', creationDate: '2023-10-20', rating: 4.6 },
-        { title: 'Django', description: 'Web profesional con Django', creationDate: '2023-11-05', rating: 4.7 },
-        { title: 'Laravel', description: 'Framework PHP Laravel', creationDate: '2023-11-18', rating: 4.3 },
-        { title: 'SQL', description: 'Bases de datos y SQL', creationDate: '2023-12-01', rating: 4.5 },
-        { title: 'MongoDB', description: 'Bases de datos NoSQL con MongoDB', creationDate: '2023-12-15', rating: 4.4 },
-        { title: 'Git y GitHub', description: 'Control de versiones con Git y GitHub', creationDate: '2024-01-05', rating: 4.8 },
-        { title: 'Docker', description: 'Contenedores y DevOps con Docker', creationDate: '2024-01-20', rating: 4.6 },
-        { title: 'AWS', description: 'Servicios en la nube con AWS', creationDate: '2024-02-01', rating: 4.5 },
-        { title: 'Linux', description: 'Administración básica de Linux', creationDate: '2024-02-15', rating: 4.4 },
-        { title: 'C++', description: 'Programación avanzada en C++', creationDate: '2024-03-01', rating: 4.3 },
-        { title: 'Go', description: 'Desarrollo backend con Go', creationDate: '2024-03-15', rating: 4.2 },
-        { title: 'Unity', description: 'Desarrollo de videojuegos con Unity', creationDate: '2024-04-01', rating: 4.7 },
-        { title: 'Unreal Engine', description: 'Videojuegos con Unreal Engine', creationDate: '2024-04-15', rating: 4.6 },
-        { title: 'Machine Learning', description: 'Introducción al Machine Learning', creationDate: '2024-05-01', rating: 4.8 },
-        { title: 'Data Science', description: 'Ciencia de datos con Python', creationDate: '2024-05-15', rating: 4.7 },
-        { title: 'Power BI', description: 'Visualización de datos con Power BI', creationDate: '2024-06-01', rating: 4.5 },
-        { title: 'Excel Avanzado', description: 'Automatización y análisis con Excel', creationDate: '2024-06-15', rating: 4.4 },
-        { title: 'SCRUM', description: 'Gestión ágil de proyectos con SCRUM', creationDate: '2024-07-01', rating: 4.3 },
-        { title: 'Firebase', description: 'Backend para apps móviles con Firebase', creationDate: '2024-07-15', rating: 4.5 },
-        { title: 'SASS', description: 'Preprocesadores CSS con SASS', creationDate: '2024-08-01', rating: 4.2 },
-        { title: 'Bootstrap', description: 'Framework CSS Bootstrap', creationDate: '2024-08-15', rating: 4.3 }
-    ];
+document.addEventListener('DOMContentLoaded', async function () {
 
-    // Referencias a elementos del DOM
-    const courseList = document.getElementById('course-list');
-    if (courseList) {
-        courses.forEach(course => {
-            const item = document.createElement('div');
-            item.className = 'course-item';
-            item.innerHTML = `
-                <h3>${course.title}</h3>
-                <p>${course.description}</p>
-                <span>Fecha: ${course.creationDate}</span>
-                <span>Rating: ${course.rating}</span>
-            `;
-            courseList.appendChild(item);
-        });
-    }
-    const loadMoreBtn = document.getElementById('load-more');
-    const sortOptions = document.getElementById('sort-options');
+    // ----------- course_list.html -----------
+    if (document.getElementById('course-list-page')) {
+        const user = JSON.parse(localStorage.getItem("usuario"));
+        const userId = user?.id || null;
 
-    // Verificación crítica de elementos
-    if (!courseList || !loadMoreBtn || !sortOptions) {
-        console.error("ERROR: Elementos del DOM no encontrados");
-        return;
-    }
+        const courseList = document.getElementById('course-list');
+        const loadMoreBtn = document.getElementById('load-more');
+        const sortOptions = document.getElementById('sort-options');
 
-    // Función para renderizar cursos
-    function renderCourses(coursesToRender) {
-        courseList.innerHTML = '';
-        coursesToRender.forEach(course => {
-            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-            courseList.innerHTML += `
-                <div class="course-item">
-                    <div class="circle" style="background-color: #${randomColor}"></div>
-                    <div class="details">
-                        <h3>${course.title}</h3>
-                        <p>${course.description}</p>
-                        <p>Fecha: ${course.creationDate}</p>
-                        <p class="rating">★ ${course.rating}</p>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // Cargar primeros cursos
-    renderCourses(courses.slice(0, 10));
-
-    // Evento para ordenar
-    sortOptions.addEventListener('change', function (e) {
-        const sortedCourses = [...courses];
-        const option = e.target.value;
-
-        if (option === 'most-popular') {
-            sortedCourses.sort((a, b) => b.rating - a.rating);
-        } else if (option === 'least-popular') {
-            sortedCourses.sort((a, b) => a.rating - b.rating);
-        } else if (option === 'most-recent') {
-            sortedCourses.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-        } else if (option === 'least-recent') {
-            sortedCourses.sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate));
+        if (!courseList || !loadMoreBtn || !sortOptions) {
+            console.error("ERROR: Elementos del DOM no encontrados");
+            return;
         }
 
-        renderCourses(sortedCourses);
-    });
+        let courses = [];
+        let renderedCount = 0;
 
-    // Evento para "Mostrar más"
-    loadMoreBtn.addEventListener('click', function () {
-        const currentCount = document.querySelectorAll('.course-item').length;
-        const moreCourses = courses.slice(currentCount, currentCount + 10);
-        moreCourses.forEach(course => {
-            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-            courseList.innerHTML += `
-                <div class="course-item">
+        function renderCourses(coursesToRender, append = false) {
+            if (!append) courseList.innerHTML = '';
+            coursesToRender.forEach(curso => {
+                const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                const comprado = curso.comprado ? '<span class="comprado">Comprado ✅</span>' : '';
+                const div = document.createElement('div');
+                div.className = 'course-item';
+                div.innerHTML = `
                     <div class="circle" style="background-color: #${randomColor}"></div>
                     <div class="details">
-                        <h3>${course.title}</h3>
-                        <p>${course.description}</p>
-                        <p>Fecha: ${course.creationDate}</p>
-                        <p class="rating">★ ${course.rating}</p>
+                        <h3>${curso.titulo}</h3>
+                        <p>${curso.nivel ? 'Nivel: ' + curso.nivel : ''}</p>
+                        <p>Fecha: ${curso.fecha_creacion || ''}</p>
+                        <p class="rating">★ ${curso.rating_promedio !== undefined ? curso.rating_promedio : ''}</p>
+                        ${comprado}
                     </div>
-                </div>
-            `;
-        });
-    });
+                `;
+                div.onclick = () => {
+                    window.location.href = `course_info.html?id=${curso.id}`;
+                };
+                courseList.appendChild(div);
+            });
+        }
 
-    console.log("Script inicializado correctamente");
+        // Construye la URL según si hay usuario
+        let url = 'http://localhost:5000/api/cursos';
+        if (userId) url += `?usuario_id=${userId}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success && Array.isArray(data.cursos)) {
+                courses = data.cursos;
+            } else {
+                alert("No se pudieron cargar los cursos.");
+                return;
+            }
+        } catch (error) {
+            alert("Error al conectar con el servidor.");
+            return;
+        }
+
+        renderCourses(courses.slice(0, 10));
+        renderedCount = 10;
+
+        sortOptions.addEventListener('change', function (e) {
+            const sortedCourses = [...courses];
+            const option = e.target.value;
+
+            if (option === 'most-popular') {
+                sortedCourses.sort((a, b) => b.rating_promedio - a.rating_promedio);
+            } else if (option === 'least-popular') {
+                sortedCourses.sort((a, b) => a.rating_promedio - b.rating_promedio);
+            } else if (option === 'most-recent') {
+                sortedCourses.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+            } else if (option === 'least-recent') {
+                sortedCourses.sort((a, b) => new Date(a.fecha_creacion) - new Date(b.fecha_creacion));
+            }
+
+            renderCourses(sortedCourses.slice(0, renderedCount));
+        });
+
+        loadMoreBtn.addEventListener('click', function () {
+            const moreCourses = courses.slice(renderedCount, renderedCount + 10);
+            renderCourses(moreCourses, true);
+            renderedCount += moreCourses.length;
+        });
+    }
+
+    // ----------- course_info.html -----------
+    if (document.getElementById('course-info-page')) {
+        const params = new URLSearchParams(window.location.search);
+        const cursoId = params.get("id");
+        if (!cursoId) {
+            alert("No se encontró el ID del curso.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/getCurso/${cursoId}`);
+            const data = await response.json();
+            if (data.success && data.curso) {
+                loadCourseData({
+                    image: data.curso.imagen || "images/img4.png",
+                    price: data.curso.precio,
+                    name: data.curso.titulo,
+                    description: data.curso.descripcion,
+                    pdf: data.curso.pdf_url // Ajusta el campo según tu backend
+                });
+            } else {
+                alert("No se pudo cargar la información del curso.");
+            }
+        } catch (error) {
+            alert("Error al conectar con el servidor.");
+        }
+    }
 });
