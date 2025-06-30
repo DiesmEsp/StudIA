@@ -93,6 +93,7 @@ footer {
     font-size: 12px;
     color: #666;
 }
+
 .contacto-section {
     max-width: 800px;
     margin: 4rem auto;
@@ -220,7 +221,8 @@ footer {
 .hero-image {
     position: relative;
     width: 100%;
-    height: 60vh; /* Altura ajustable según necesites */
+    height: 60vh;
+    /* Altura ajustable según necesites */
     /*background-image: url('ruta-a-tu-imagen.jpg');*/
     /* Aquí pondrás la ruta de tu imagen */
     background-size: cover;
@@ -237,7 +239,8 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Overlay semitransparente para mejorar legibilidad */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Overlay semitransparente para mejorar legibilidad */
 }
 
 .hero-title {
@@ -247,7 +250,8 @@ footer {
     max-width: 800px;
     padding: 0 2rem;
     margin: 0;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejorar legibilidad */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Sombra para mejorar legibilidad */
 }
 
 /* Responsive design */
@@ -340,7 +344,7 @@ footer {
 .imagen-preview img {
     width: 100%;
     height: 500px;
-    object-fit: cover;
+    /* object-fit: cover; */
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -570,7 +574,7 @@ footer {
     padding: 1rem;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
 }
 
@@ -645,7 +649,7 @@ footer {
     background: #fff;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: fit-content;
 }
 
