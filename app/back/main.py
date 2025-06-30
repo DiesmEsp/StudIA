@@ -287,7 +287,72 @@ def registrar_usuario():
         print("[ERROR registro]:", str(e))
         return jsonify({"success": False, "mensaje": "Error interno del servidor."}), 500
 
+# === Endpoint para listar cursos ===
+@app.route("/api/cursos", methods=["GET"])
+def listar_cursos():
+    usuario_id = request.args.get("usuario_id", type=int)
 
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        mensaje = ""
+        cursos_comprados = set()
+
+        if usuario_id is not None:
+            # Verificar que el usuario existe
+            cursor.execute("SELECT id FROM usuarios WHERE id = ?", (usuario_id,))
+            usuario = cursor.fetchone()
+
+            if usuario is None:
+                mensaje = f"Usuario con ID {usuario_id} no encontrado."
+                usuario_id = None  # Anulamos el ID para no seguir buscando cursos comprados
+            else:
+                mensaje = f"Usuario con ID {usuario_id} detectado."
+                
+                # Obtener cursos comprados por este usuario
+                cursor.execute("""
+                    SELECT dc.curso_id
+                    FROM compras c
+                    JOIN detalle_compra dc ON c.id = dc.compra_id
+                    WHERE c.usuario_id = ?
+                """, (usuario_id,))
+                cursos_comprados = {row["curso_id"] for row in cursor.fetchall()}
+        else:
+            mensaje = "No se recibió ningún ID de usuario."
+
+        # Obtener todos los cursos activos
+        cursor.execute("""
+            SELECT id, titulo, nivel, DATE(fecha_creacion) AS fecha_creacion, rating_promedio
+            FROM cursos
+            WHERE activo = 1
+            ORDER BY fecha_creacion DESC
+        """)
+        cursos = cursor.fetchall()
+
+        # Armar el listado de cursos
+        cursos_data = []
+        for curso in cursos:
+            cursos_data.append({
+                "id": curso["id"],
+                "titulo": curso["titulo"],
+                "nivel": curso["nivel"],
+                "fecha_creacion": curso["fecha_creacion"],
+                "rating_promedio": curso["rating_promedio"],
+                "comprado": curso["id"] in cursos_comprados
+            })
+
+        return jsonify({
+            "success": True,
+            "mensaje": mensaje,
+            "cursos": cursos_data
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "mensaje": f"Error interno: {str(e)}"}), 500
+
+    finally:
+        conn.close()
 
 
 
