@@ -125,7 +125,7 @@ h1 {
 }
 
 #login-page .form-group input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -199,7 +199,7 @@ h1 {
 }
 
 #register-page .form-group input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -229,6 +229,22 @@ h1 {
 
 #register-page .remember-me input {
     margin-right: 10px;
+}
+
+#register-page .account-text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+#register-page .account-text a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#register-page .account-text a:hover {
+    text-decoration: underline;
 }
 
 /* Estilo específico para la página de información del curso */
