@@ -1,0 +1,2 @@
+# Ignorar la carpeta .idea de JetBrains (IDEs como PyCharm, IntelliJ)
+.idea/
