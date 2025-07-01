@@ -472,6 +472,52 @@ def agregar_al_carrito():
         "mensaje": f"Curso {curso_id} añadido al carrito del usuario {usuario_id}."
     }), 201
 
+# === Endpoint para obtener el carrito de un usuario ===
+@app.route('/api/carrito/<int:usuario_id>', methods=['GET'])
+def obtener_carrito(usuario_id):
+    conn = get_db_connection()
+    
+    # Verificar si el usuario existe
+    user = conn.execute('SELECT * FROM usuarios WHERE id = ?', (usuario_id,)).fetchone()
+    if user is None:
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Usuario con id {usuario_id} no encontrado."}), 404
+
+    # Obtener los cursos en el carrito
+    cursos = conn.execute('''
+        SELECT 
+            cursos.id,
+            cursos.titulo,
+            cursos.descripcion,
+            cursos.nivel,
+            cursos.precio,
+            carrito.fecha_agregado
+        FROM carrito
+        JOIN cursos ON carrito.curso_id = cursos.id
+        WHERE carrito.usuario_id = ?
+    ''', (usuario_id,)).fetchall()
+    
+    conn.close()
+
+    # Armar lista de resultados
+    cursos_json = [
+        {
+            "id": curso["id"],
+            "titulo": curso["titulo"],
+            "descripcion": curso["descripcion"],
+            "nivel": curso["nivel"],
+            "precio": curso["precio"],
+            "fecha_agregado": curso["fecha_agregado"].split(" ")[0]  # Solo fecha
+        }
+        for curso in cursos
+    ]
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Carrito del usuario con id {usuario_id} obtenido exitosamente.",
+        "cursos": cursos_json
+    })
+
 
 
 # === Iniciar la app ===
