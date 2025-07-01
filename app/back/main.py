@@ -361,6 +361,9 @@ def obtener_detalle_curso(id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Leer el usuario_id opcional desde el query string
+        usuario_id = request.args.get("usuario_id", type=int)
+
         # Buscar datos del curso
         cursor.execute("""
             SELECT id, codigo, titulo, descripcion, nivel, duracion,
@@ -383,6 +386,18 @@ def obtener_detalle_curso(id):
         """, (id,))
         temas = [row["tema"] for row in cursor.fetchall()]
 
+        # Verificar si fue comprado por el usuario (si se proporcionó uno)
+        comprado = False
+        if usuario_id is not None:
+            cursor.execute("""
+                SELECT 1
+                FROM compras c
+                JOIN detalle_compra dc ON c.id = dc.compra_id
+                WHERE c.usuario_id = ? AND dc.curso_id = ?
+                LIMIT 1
+            """, (usuario_id, id))
+            comprado = cursor.fetchone() is not None
+
         return jsonify({
             "success": True,
             "curso": {
@@ -396,7 +411,8 @@ def obtener_detalle_curso(id):
                 "fecha_creacion": curso["fecha_creacion"],
                 "rating_promedio": curso["rating_promedio"],
                 "activo": bool(curso["activo"]),
-                "temas": temas
+                "temas": temas,
+                "comprado": comprado
             }
         })
 
