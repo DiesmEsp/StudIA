@@ -209,6 +209,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    /*
     // ----------- course_info.html -----------
     if (document.getElementById('course-info-page')) {
         const params = new URLSearchParams(window.location.search);
@@ -218,22 +219,63 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        try {
-            const response = await fetch(`http://localhost:5000/getCurso/${cursoId}`);
-            const data = await response.json();
-            if (data.success && data.curso) {
-                loadCourseData({
-                    image: data.curso.imagen || "images/img4.png",
-                    price: data.curso.precio,
-                    name: data.curso.titulo,
-                    description: data.curso.descripcion,
-                    pdf: data.curso.pdf_url // Ajusta el campo según tu backend
-                });
-            } else {
-                alert("No se pudo cargar la información del curso.");
-            }
-        } catch (error) {
-            alert("Error al conectar con el servidor.");
-        }
+        fetch(`http://127.0.0.1:5000/api/curso/${cursoId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Error: " + data.mensaje);
+                    return;
+                }
+
+                const curso = data.curso;
+
+                // Rellenar los elementos del DOM
+                document.getElementById("course-name").textContent = curso.titulo;
+                document.getElementById("course-description").textContent = curso.descripcion;
+                document.getElementById("add-to-cart").textContent = `S/. ${curso.precio.toFixed(2)}`;
+                document.getElementById("course-img").src = curso.imagen || "images/img4.png";
+
+                // PDF
+                const pdfBtn = document.getElementById("pdf-btn");
+                if (pdfBtn) {
+                    if (curso.pdf_url) {
+                        pdfBtn.style.display = "inline-block";
+                        pdfBtn.onclick = function () {
+                            window.open(curso.pdf_url, "_blank");
+                        };
+                    } else {
+                        pdfBtn.style.display = "inline-block";
+                        pdfBtn.onclick = function () {
+                            showPopup();
+                        };
+                    }
+                }
+
+                // (Opcional) Mostrar los temas
+                if (curso.temas && curso.temas.length > 0) {
+                    const temasDiv = document.createElement("div");
+                    temasDiv.classList.add("temas");
+
+                    const tituloTemas = document.createElement("h4");
+                    tituloTemas.textContent = "Temas del curso:";
+                    temasDiv.appendChild(tituloTemas);
+
+                    const ul = document.createElement("ul");
+                    curso.temas.forEach(tema => {
+                        const li = document.createElement("li");
+                        li.textContent = tema;
+                        ul.appendChild(li);
+                    });
+
+                    temasDiv.appendChild(ul);
+
+                    document.querySelector(".course-details").appendChild(temasDiv);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error al cargar la información del curso.");
+            });
     }
+    */
 });
