@@ -42,6 +42,27 @@
         </div>
     </div>
 
+    <!-- Modal Yape -->
+    <div id="yape-modal" class="yape-modal-bg" style="display:none;">
+        <div class="yape-modal">
+            <img src="images/logo_yape.png" alt="Yape" class="yape-logo">
+            <div class="yape-titulo">INTRODUZCA SU<br>CÓDIGO DE APROBACIÓN</div>
+            <form id="yape-form" autocomplete="off">
+                <input id="yape-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="yape-input" autofocus>
+                <div id="yape-x-row">
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                </div>
+                <div id="yape-error" class="yape-error"></div>
+            </form>
+            <button id="yape-close" class="yape-close-btn">&times;</button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>

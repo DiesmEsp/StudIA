@@ -36,16 +36,16 @@ if (newCheckbox) {
 }
 
 // Función para cambiar el texto del botón al pasar el puntero por encima
-const addToCartBtn = document.getElementById("add-to-cart");
-if (addToCartBtn) {
-    addToCartBtn.dataset.price = addToCartBtn.textContent;
-    addToCartBtn.addEventListener("mouseover", function () {
-        this.textContent = "Añadir al Carrito";
-    });
-    addToCartBtn.addEventListener("mouseout", function () {
-        this.textContent = this.dataset.price;
-    });
-}
+// const addToCartBtn = document.getElementById("add-to-cart");
+// if (addToCartBtn) {
+//     addToCartBtn.dataset.price = addToCartBtn.textContent;
+//     addToCartBtn.addEventListener("mouseover", function () {
+//         this.textContent = "Añadir al Carrito";
+//     });
+//     addToCartBtn.addEventListener("mouseout", function () {
+//         this.textContent = this.dataset.price;
+//     });
+// }
 
 // Mostrar información del curso y cargar el contenido dinámicamente
 function loadCourseData(courseData) {
@@ -122,8 +122,6 @@ if (document.getElementById("course-img")) {
 // ===================== LÓGICA POR PÁGINA =====================
 
 document.addEventListener('DOMContentLoaded', async function () {
-
-    // ----------- course_list.html -----------
     if (document.getElementById('course-list-page')) {
         const user = JSON.parse(localStorage.getItem("usuario"));
         const userId = user?.id || null;
@@ -131,17 +129,51 @@ document.addEventListener('DOMContentLoaded', async function () {
         const courseList = document.getElementById('course-list');
         const loadMoreBtn = document.getElementById('load-more');
         const sortOptions = document.getElementById('sort-options');
+        const filterComprados = document.getElementById('filter-comprados');
 
-        if (!courseList || !loadMoreBtn || !sortOptions) {
+        if (!courseList || !loadMoreBtn || !sortOptions || !filterComprados) {
             console.error("ERROR: Elementos del DOM no encontrados");
             return;
         }
 
-        let courses = [];
+        // Estado de la aplicación
+        let allCourses = [];
+        let currentCourses = [];
+        let displayedCourses = [];
+        let currentSort = 'most-popular';
+        let currentFilter = false;
         let renderedCount = 0;
+        const coursesPerPage = 10;
 
-        function renderCourses(coursesToRender, append = false) {
-            if (!append) courseList.innerHTML = '';
+        // Función para aplicar filtros
+        function applyFilters() {
+            return currentFilter 
+                ? allCourses.filter(curso => curso.comprado) 
+                : [...allCourses];
+        }
+
+        // Función para aplicar ordenamiento
+        function applySort(courses) {
+            const sorted = [...courses];
+            
+            switch(currentSort) {
+                case 'most-popular':
+                    return sorted.sort((a, b) => (b.rating_promedio || 0) - (a.rating_promedio || 0));
+                case 'least-popular':
+                    return sorted.sort((a, b) => (a.rating_promedio || 0) - (b.rating_promedio || 0));
+                case 'most-recent':
+                    return sorted.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+                case 'least-recent':
+                    return sorted.sort((a, b) => new Date(a.fecha_creacion) - new Date(b.fecha_creacion));
+                default:
+                    return sorted;
+            }
+        }
+
+        // Función para renderizar cursos
+        function renderCourses(coursesToRender) {
+            courseList.innerHTML = ''; // Limpiar antes de renderizar
+            
             coursesToRender.forEach(curso => {
                 const randomColor = Math.floor(Math.random() * 16777215).toString(16);
                 const comprado = curso.comprado ? '<span class="comprado">Comprado ✅</span>' : '';
@@ -162,9 +194,35 @@ document.addEventListener('DOMContentLoaded', async function () {
                 };
                 courseList.appendChild(div);
             });
+
+            // Actualizar estado del botón "Mostrar más"
+            loadMoreBtn.disabled = renderedCount >= currentCourses.length;
         }
 
-        // Construye la URL según si hay usuario
+        // Función para cargar la siguiente página de cursos
+        function loadMoreCourses() {
+            const nextCourses = currentCourses.slice(renderedCount, renderedCount + coursesPerPage);
+            displayedCourses = [...displayedCourses, ...nextCourses];
+            renderedCount += nextCourses.length;
+            renderCourses(displayedCourses);
+        }
+
+        // Función principal para actualizar la vista
+        function updateCourses(resetPagination = true) {
+            // Aplicar filtros y ordenamiento
+            currentCourses = applySort(applyFilters());
+            
+            // Reiniciar paginación si es necesario
+            if (resetPagination) {
+                renderedCount = 0;
+                displayedCourses = [];
+            }
+            
+            // Cargar la primera página
+            loadMoreCourses();
+        }
+
+        // Cargar cursos iniciales
         let url = 'http://localhost:5000/api/cursos';
         if (userId) url += `?usuario_id=${userId}`;
 
@@ -172,7 +230,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             const response = await fetch(url);
             const data = await response.json();
             if (data.success && Array.isArray(data.cursos)) {
-                courses = data.cursos;
+                allCourses = data.cursos;
+                updateCourses(); // Renderizar inicialmente
             } else {
                 alert("No se pudieron cargar los cursos.");
                 return;
@@ -182,33 +241,22 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        renderCourses(courses.slice(0, 10));
-        renderedCount = 10;
-
-        sortOptions.addEventListener('change', function (e) {
-            const sortedCourses = [...courses];
-            const option = e.target.value;
-
-            if (option === 'most-popular') {
-                sortedCourses.sort((a, b) => b.rating_promedio - a.rating_promedio);
-            } else if (option === 'least-popular') {
-                sortedCourses.sort((a, b) => a.rating_promedio - b.rating_promedio);
-            } else if (option === 'most-recent') {
-                sortedCourses.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
-            } else if (option === 'least-recent') {
-                sortedCourses.sort((a, b) => new Date(a.fecha_creacion) - new Date(b.fecha_creacion));
-            }
-
-            renderCourses(sortedCourses.slice(0, renderedCount));
+        // Event listeners
+        filterComprados.addEventListener('change', function() {
+            currentFilter = this.checked;
+            updateCourses(true); // Reiniciar paginación al cambiar filtro
         });
 
-        loadMoreBtn.addEventListener('click', function () {
-            const moreCourses = courses.slice(renderedCount, renderedCount + 10);
-            renderCourses(moreCourses, true);
-            renderedCount += moreCourses.length;
+        sortOptions.addEventListener('change', function(e) {
+            currentSort = e.target.value;
+            updateCourses(true); // Reiniciar paginación al cambiar orden
+        });
+
+        loadMoreBtn.addEventListener('click', function() {
+            loadMoreCourses();
         });
     }
-
+});
     /*
     // ----------- course_info.html -----------
     if (document.getElementById('course-info-page')) {
@@ -278,4 +326,3 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
     }
     */
-});

@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="header/header.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 </head>
 
 <body id="course-list-page">
@@ -31,11 +32,14 @@
         <div class="left-side">
             <h2>¡Los mejores cursos de programación en un solo lugar!</h2>
             <select id="sort-options">
-                <option value="most-popular">Más populares</option>
+                <option value="most-popular" selected>Más populares</option>
                 <option value="least-popular">Menos populares</option>
                 <option value="most-recent">Más recientes</option>
                 <option value="least-recent">Menos recientes</option>
             </select>
+            <label>
+                <input type="checkbox" id="filter-comprados"> Comprados
+            </label>
 
             <div id="course-list">
                 <!-- Los cursos se cargarán aquí -->
@@ -51,7 +55,7 @@
         <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>
     </div>
 
-    <script src="header/header.js"></script>
+    <script src="/header/header.js"></script>
     <script src="js/scripts.js" defer></script>
 </body>
 
