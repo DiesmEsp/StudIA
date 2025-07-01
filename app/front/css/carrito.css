@@ -165,3 +165,106 @@ body, .carrito-main-container {
         margin-top: 18px;
     }
 }
+
+/* Modal Yape */
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+@font-face {
+    font-family: 'ComicShannsMono', sans-serif;
+    src: url('fonts/ComicShannsMono.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.yape-modal-bg {
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yape-modal {
+    background: #5f0b72;
+    border-radius: 18px;
+    padding: 36px 32px 32px 32px;
+    min-width: 340px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.yape-logo {
+    width: 64px;
+    margin-bottom: 18px;
+}
+
+.yape-titulo {
+    color: #fff;
+    font-family: 'Lilita One', cursive, Arial, sans-serif;
+    font-size: 1.35rem;
+    text-align: center;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.yape-input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+#yape-x-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.yape-x {
+    font-family: 'Comic Shanns', 'Comic Sans MS', cursive, sans-serif;
+    font-size: 2.2rem;
+    color: #bdbdbd;
+    width: 32px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 3px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.yape-x.filled {
+    color: #5f0b72;
+    border-bottom: 3px solid #5f0b72;
+}
+
+.yape-error {
+    color: #ffb3c6;
+    font-family: 'Lilita One', Arial, sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    min-height: 24px;
+    margin-bottom: 0;
+}
+
+.yape-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.2s;
+}
+
+.yape-close-btn:hover {
+    color: #ffb3c6;
+}

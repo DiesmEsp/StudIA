@@ -4,9 +4,7 @@ Con la lista de cursos que te doy a continuación, construye un roadmap de apren
 
 Tu objetivo es seleccionar los cursos más relevantes que contribuyan al dominio del tema, considerando temas, nivel de dificultad y prerequisitos.
 
-Además de los cursos directamente relacionados con el tema, puedes incluir algunos cursos complementarios que aporten fundamentos técnicos o habilidades transversales útiles en contextos reales.
-
-Evita incluir cursos centrados en tecnologías no esenciales al tema principal.
+Selecciona solo los cursos estrictamente necesarios para comprender y dominar el tema principal, sin incluir cursos complementarios ni tecnologías adyacentes.
 
 
 Devuélveme exclusivamente una lista de aristas (duplas) en este formato:
