@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,13 +8,17 @@
     <script src=js/Presentacion.js defer></script>
     <link rel="preload" href="css/StyleIndex.css" as="style">
     <link rel="stylesheet" href="css/StyleIndex.css">
+
+    <link rel="stylesheet" href="header/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
+
 <body>
-<div class="titulo-principal">
+<div class=" titulo-principal">
     <h1 class="titulo">StudIA</h1>
 </div>
 
-<header class="header">
+<!-- <header class="header">
     <div class="logo-container">
         <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
         <h1>StudIA</h1>
@@ -27,7 +32,8 @@
         <a href="#Contacto">Contacto</a>
         <a href="inicio_sesion.html" class="access-button">Acceder</a>
     </nav>
-</header>
+</header> -->
+<div id="shared-header"></div>
 
 <section class="hero-section">
     <div class="hero-image">
@@ -56,7 +62,7 @@
             <a href="roadmap.html" class="explora-btn">Probar</a>
         </div>
     </div>
-    </section>
+</section>
 
 
 <section class="objetivos-section">
@@ -105,7 +111,8 @@
             <div class="quienes-somos-text">
                 <div class="mission-box">
                     <h3>Nuestra Misión</h3>
-                    <p>Transformar la educación en programación haciéndola accesible, práctica y personalizada para todos aquellos que desean adentrarse en el mundo del desarrollo de software.</p>
+                    <p>Transformar la educación en programación haciéndola accesible, práctica y personalizada para
+                        todos aquellos que desean adentrarse en el mundo del desarrollo de software.</p>
                 </div>
 
                 <div class="valores-grid">
@@ -132,7 +139,7 @@
                 </div>
             </div>
 
-            <div class="quienes-somos-stats">
+            <!-- <div class="quienes-somos-stats">
                 <div class="stat-card">
                     <span class="stat-number">1000+</span>
                     <span class="stat-label">Estudiantes</span>
@@ -145,12 +152,12 @@
                     <span class="stat-number">95%</span>
                     <span class="stat-label">Satisfacción</span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
 
-<section id="Contacto" class="contacto-section">
+<!-- <section id="Contacto" class="contacto-section">
     <h2>Contáctanos</h2>
     <form class="contacto-form">
         <fieldset>
@@ -183,11 +190,14 @@
             </div>
         </fieldset>
     </form>
-</section>
+</section> -->
 
 
 <footer>
-        <p>Hecho con amor para la humanidad. CodeTrail SAC TM CC</p>
-    </footer>
+    <p>Hecho con amor para la humanidad. CodeTrail SAC TM CC</p>
+</footer>
+
+<script src="header/header.js"></script>
 </body>
+
 </html>
