@@ -19,9 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (res.ok && data.success) {
+                console.log("Inicio de sesión exitoso:", data);
+
                 // Guardar datos en localStorage
                 localStorage.setItem("usuario", JSON.stringify({
-                    id: data.id,
+                    id: data.user_id,
                     nombre: data.nombre
                 }));
 

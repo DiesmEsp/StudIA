@@ -349,6 +349,77 @@ footer {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.explora-section {
+    padding: 6rem 2rem;
+    background-color: #ffffff;
+}
+
+.explora-title {
+    text-align: center;
+    font-size: 3.2rem;
+    color: #2c3e50;
+    margin-bottom: 4rem;
+}
+
+.explora-cards {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+}
+
+.explora-card {
+    background-color: #f9f9f9;
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.explora-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.explora-card h3 {
+    font-size: 2.4rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.explora-card p {
+    font-size: 1.6rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.explora-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.6rem;
+    transition: background-color 0.3s ease;
+}
+
+.explora-btn:hover {
+    background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+    .explora-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 /* Responsive design */
 @media (max-width: 968px) {
     .objetivos-container {
