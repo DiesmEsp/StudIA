@@ -425,6 +425,54 @@ def obtener_detalle_curso(id):
     finally:
         conn.close()
 
+# === Endpoint para agregar un curso al carrito ===
+@app.route("/api/carrito", methods=["POST"])
+def agregar_al_carrito():
+    data = request.get_json()
+
+    if not data or "usuario_id" not in data or "curso_id" not in data:
+        return jsonify({"success": False, "mensaje": "Faltan campos requeridos."}), 400
+
+    usuario_id = data["usuario_id"]
+    curso_id = data["curso_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar que el usuario existe
+    cursor.execute("SELECT id FROM usuarios WHERE id = ?", (usuario_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Usuario con id {usuario_id} no existe."}), 404
+
+    # Verificar que el curso existe
+    cursor.execute("SELECT id FROM cursos WHERE id = ?", (curso_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Curso con id {curso_id} no existe."}), 404
+
+    # Verificar si ya está en el carrito
+    cursor.execute("""
+        SELECT id FROM carrito WHERE usuario_id = ? AND curso_id = ?
+    """, (usuario_id, curso_id))
+    if cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": "El curso ya está en el carrito."}), 409
+
+    # Insertar en la tabla carrito
+    cursor.execute("""
+        INSERT INTO carrito (usuario_id, curso_id) VALUES (?, ?)
+    """, (usuario_id, curso_id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Curso {curso_id} añadido al carrito del usuario {usuario_id}."
+    }), 201
+
+
 
 # === Iniciar la app ===
 if __name__ == "__main__":
