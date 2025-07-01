@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("cerrarSesionBtn").addEventListener("click", () => {
                     if (confirm("¿Cerrar sesión?")) {
                         localStorage.removeItem("usuario");
-                        location.reload();
+                        location.href = "index.html";
                     }
                 });
             } else {
