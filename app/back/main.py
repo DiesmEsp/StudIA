@@ -518,6 +518,47 @@ def obtener_carrito(usuario_id):
         "cursos": cursos_json
     })
 
+# === Endpoint para eliminar un curso del carrito ===
+@app.route('/api/carrito/<int:usuario_id>', methods=['DELETE'])
+def eliminar_curso_carrito(usuario_id):
+    curso_id = request.args.get('curso_id', type=int)
+
+    if not curso_id:
+        return jsonify({
+            "success": False,
+            "mensaje": "Falta el parámetro curso_id en la URL."
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar si el curso está en el carrito del usuario
+    cursor.execute(
+        "SELECT id FROM carrito WHERE usuario_id = ? AND curso_id = ?",
+        (usuario_id, curso_id)
+    )
+    item = cursor.fetchone()
+
+    if not item:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": f"El curso con id {curso_id} no está en el carrito del usuario {usuario_id}."
+        }), 404
+
+    # Eliminar el curso del carrito
+    cursor.execute(
+        "DELETE FROM carrito WHERE usuario_id = ? AND curso_id = ?",
+        (usuario_id, curso_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Curso con id {curso_id} eliminado del carrito del usuario {usuario_id}."
+    }), 200
+
 
 
 # === Iniciar la app ===
