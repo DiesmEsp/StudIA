@@ -125,8 +125,9 @@ document.querySelector(".roadmap-generate-button").addEventListener("click", asy
         myDiagram.addDiagramListener("ObjectSingleClicked", (e) => {
             const node = e.subject.part;
             if (node && node.data.key) {
-                const id = node.data.key;
-                const url = `/getCurso/${id}`;
+                const key = node.data.key; // Ejemplo: "C10"
+                const id = key.replace(/^C/, ''); // Quita la "C" inicial
+                const url = `/course_info.html?id=${id}`;
                 window.open(url, "_blank");
             }
         });
