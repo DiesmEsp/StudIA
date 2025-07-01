@@ -581,6 +581,17 @@ def procesar_compra():
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    # Verificar que el usuario exista
+    cursor.execute('SELECT id FROM usuarios WHERE id = ?', (usuario_id,))
+    usuario = cursor.fetchone()
+
+    if not usuario:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": f"El usuario con id {usuario_id} no existe."
+        }), 404
+
     # Obtener cursos en el carrito
     cursor.execute('''
         SELECT curso_id, precio
