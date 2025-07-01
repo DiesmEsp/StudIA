@@ -5,11 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>StudIA</title>
+    <script src=js/Presentacion.js defer></script>
     <link rel="preload" href="css/StyleIndex.css" as="style">
     <link rel="stylesheet" href="css/StyleIndex.css">
-
-    <link rel="stylesheet" href="header/header.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
@@ -17,7 +15,7 @@
         <h1 class="titulo">StudIA</h1>
     </div>
 
-    <!-- <header class="header">
+    <header class="header">
         <div class="logo-container">
             <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
             <h1>StudIA</h1>
@@ -31,12 +29,11 @@
             <a href="#Contacto">Contacto</a>
             <a href="inicio_sesion.html" class="access-button">Acceder</a>
         </nav>
-    </header> -->
-    <div id="shared-header"></div>
+    </header>
 
     <section class="hero-section">
         <div class="hero-image">
-            <!-- La imagen irá como background en CSS -->
+            <img src="images/imgPresentacion1.jpg" alt="Imagen destacada" class="hero-image-display">
             <div class="hero-content">
                 <h2 class="hero-title">Aprende a programar desde cero. En cualquier lugar, a tu ritmo</h2>
             </div>
@@ -64,29 +61,28 @@
     </section>
 
 
-
     <section class="objetivos-section">
         <h2 class="objetivos-title">Aprendizaje orientado a tus objetivos</h2>
 
         <div class="objetivos-container">
             <!-- Columna izquierda con los cuadros -->
             <div class="objetivos-cards">
-                <div class="objetivo-card" data-image="ruta-imagen-1.jpg">
+                <div class="objetivo-card" data-image="images/imgPresentacion2.png">
                     <h3>Aprendizaje Personalizado</h3>
                     <p>Adapta tu experiencia de aprendizaje según tus necesidades y ritmo.</p>
                 </div>
 
-                <div class="objetivo-card" data-image="ruta-imagen-2.jpg">
+                <div class="objetivo-card" data-image="images/imgPresentacion3.png">
                     <h3>Proyectos Prácticos</h3>
                     <p>Desarrolla habilidades reales trabajando en proyectos del mundo real.</p>
                 </div>
 
-                <div class="objetivo-card" data-image="ruta-imagen-3.jpg">
+                <div class="objetivo-card" data-image="images/imgPresentacion4.png">
                     <h3>Mentoría Experta</h3>
                     <p>Recibe guía de profesionales experimentados en el campo.</p>
                 </div>
 
-                <div class="objetivo-card" data-image="ruta-imagen-4.jpg">
+                <div class="objetivo-card" data-image="images/imgPresentacion5.png">
                     <h3>Comunidad Activa</h3>
                     <p>Conéctate y aprende junto a otros estudiantes apasionados.</p>
                 </div>
@@ -94,7 +90,7 @@
 
             <!-- Columna derecha para la imagen -->
             <div class="imagen-preview">
-                <img src="images/bucle1.png" alt="Imagen destacada" id="imagen-destacada">
+                <img src="images/imgPresentacion2.png" alt="Imagen destacada" id="imagen-destacada">
             </div>
         </div>
     </section>
@@ -139,65 +135,63 @@
                     </div>
                 </div>
 
-                <!-- <div class="quienes-somos-stats">
-                <div class="stat-card">
-                    <span class="stat-number">1000+</span>
-                    <span class="stat-label">Estudiantes</span>
+                <div class="quienes-somos-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">Estudiantes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Cursos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">95%</span>
+                        <span class="stat-label">Satisfacción</span>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">Cursos</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">95%</span>
-                    <span class="stat-label">Satisfacción</span>
-                </div>
-            </div> -->
             </div>
         </div>
     </section>
 
-    <!-- <section id="Contacto" class="contacto-section">
-    <h2>Contáctanos</h2>
-    <form class="contacto-form">
-        <fieldset>
-            <legend>Contáctanos llenando todos los campos</legend>
+    <section id="Contacto" class="contacto-section">
+        <h2>Contáctanos</h2>
+        <form class="contacto-form">
+            <fieldset>
+                <legend>Contáctanos llenando todos los campos</legend>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" placeholder="Tu Nombre">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" placeholder="Tu Nombre">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Correo">Correo</label>
+                        <input type="email" id="Correo" placeholder="Tu Correo">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="Correo">Correo</label>
-                    <input type="email" id="Correo" placeholder="Tu Correo">
+                    <label for="telefono">Teléfono</label>
+                    <input id="telefono" type="tel" placeholder="Tu teléfono">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input id="telefono" type="tel" placeholder="Tu teléfono">
-            </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" placeholder="Escribe tu mensaje aquí"></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="mensaje">Mensaje</label>
-                <textarea id="mensaje" placeholder="Escribe tu mensaje aquí"></textarea>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Enviar" class="submit-button">
-            </div>
-        </fieldset>
-    </form>
-</section> -->
+                <div class="form-group">
+                    <input type="submit" value="Enviar" class="submit-button">
+                </div>
+            </fieldset>
+        </form>
+    </section>
 
 
     <footer>
         <p>Hecho con amor para la humanidad. CodeTrail SAC TM CC</p>
     </footer>
-
-    <script src="header/header.js"></script>
 </body>
 
 </html>
