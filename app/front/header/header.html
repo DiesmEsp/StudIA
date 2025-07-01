@@ -3,9 +3,19 @@
         <img src="images/logo_studia.png" alt="StudIA Logo" class="logo" />
         <h1>StudIA</h1>
     </a>
-    <div class="search-container">
-        <input type="text" placeholder="Buscar" />
-        <img src="images/lupa.png" alt="Buscar" class="lupa" />
+
+    <!-- Contenedor derecho con iconos fijos + usuario -->
+    <div class="header-actions">
+        <div class="fixed-links">
+            <button onclick="location.href='/course_list.html'" class="nav-icon-btn" title="Lista de cursos">
+                <i class="fa-solid fa-book-open"></i>
+            </button>
+
+            <button onclick="location.href='/roadmap.html'" class="nav-icon-btn" title="Generador de roadmap">
+                <i class="fa-solid fa-diagram-project"></i>
+            </button>
+        </div>
+
+        <div class="usuario-header-container" id="usuario-info"></div>
     </div>
-    <div class="usuario-header-container" id="usuario-info"></div>
 </header>
