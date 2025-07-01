@@ -221,7 +221,12 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"error": "Faltan campos obligatorios"}), 400
+        return jsonify({"success": False, "mensaje": "Faltan campos obligatorios"}), 400
+    
+    EMAIL_REGEX = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    
+    if not re.match(EMAIL_REGEX, email):
+        return jsonify({"success": False, "mensaje": "Correo electrónico no válido."}), 400
 
     try:
         conn = get_db_connection()
@@ -231,7 +236,7 @@ def login():
         conn.close()
 
         if user is None or user["password"] != password:
-            return jsonify({"error": "Usuario y/o contraseña incorrectos"}), 401
+            return jsonify({"success": False, "mensaje": "Usuario y/o contraseña incorrectos"}), 401
 
         return jsonify({
             "success": True,
@@ -241,7 +246,7 @@ def login():
 
     except Exception as e:
         print("[Error en login]:", str(e))
-        return jsonify({"error": "Error interno del servidor"}), 500
+        return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
 
 # === Endpoint para registrar un nuevo usuario ===
 @app.route("/api/registro", methods=["POST"])
@@ -282,8 +287,236 @@ def registrar_usuario():
         print("[ERROR registro]:", str(e))
         return jsonify({"success": False, "mensaje": "Error interno del servidor."}), 500
 
+# === Endpoint para listar cursos ===
+@app.route("/api/cursos", methods=["GET"])
+def listar_cursos():
+    usuario_id = request.args.get("usuario_id", type=int)
 
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
+        mensaje = ""
+        cursos_comprados = set()
+
+        if usuario_id is not None:
+            # Verificar que el usuario existe
+            cursor.execute("SELECT id FROM usuarios WHERE id = ?", (usuario_id,))
+            usuario = cursor.fetchone()
+
+            if usuario is None:
+                mensaje = f"Usuario con ID {usuario_id} no encontrado."
+                usuario_id = None  # Anulamos el ID para no seguir buscando cursos comprados
+            else:
+                mensaje = f"Usuario con ID {usuario_id} detectado."
+                
+                # Obtener cursos comprados por este usuario
+                cursor.execute("""
+                    SELECT dc.curso_id
+                    FROM compras c
+                    JOIN detalle_compra dc ON c.id = dc.compra_id
+                    WHERE c.usuario_id = ?
+                """, (usuario_id,))
+                cursos_comprados = {row["curso_id"] for row in cursor.fetchall()}
+        else:
+            mensaje = "No se recibió ningún ID de usuario."
+
+        # Obtener todos los cursos activos
+        cursor.execute("""
+            SELECT id, titulo, nivel, DATE(fecha_creacion) AS fecha_creacion, rating_promedio
+            FROM cursos
+            WHERE activo = 1
+            ORDER BY fecha_creacion DESC
+        """)
+        cursos = cursor.fetchall()
+
+        # Armar el listado de cursos
+        cursos_data = []
+        for curso in cursos:
+            cursos_data.append({
+                "id": curso["id"],
+                "titulo": curso["titulo"],
+                "nivel": curso["nivel"],
+                "fecha_creacion": curso["fecha_creacion"],
+                "rating_promedio": curso["rating_promedio"],
+                "comprado": curso["id"] in cursos_comprados
+            })
+
+        return jsonify({
+            "success": True,
+            "mensaje": mensaje,
+            "cursos": cursos_data
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "mensaje": f"Error interno: {str(e)}"}), 500
+
+    finally:
+        conn.close()
+
+# === Endpoint para obtener el detalle de un curso ===
+@app.route("/api/curso/<int:id>", methods=["GET"])
+def obtener_detalle_curso(id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Leer el usuario_id opcional desde el query string
+        usuario_id = request.args.get("usuario_id", type=int)
+
+        # Buscar datos del curso
+        cursor.execute("""
+            SELECT id, codigo, titulo, descripcion, nivel, duracion,
+                   precio, DATE(fecha_creacion) AS fecha_creacion,
+                   rating_promedio, activo
+            FROM cursos
+            WHERE id = ?
+        """, (id,))
+        curso = cursor.fetchone()
+
+        if curso is None:
+            return jsonify({
+                "success": False,
+                "mensaje": f"Curso con ID {id} no encontrado."
+            }), 404
+
+        # Buscar temas asociados al curso
+        cursor.execute("""
+            SELECT tema FROM curso_temas WHERE curso_id = ?
+        """, (id,))
+        temas = [row["tema"] for row in cursor.fetchall()]
+
+        # Verificar si fue comprado por el usuario (si se proporcionó uno)
+        comprado = False
+        if usuario_id is not None:
+            cursor.execute("""
+                SELECT 1
+                FROM compras c
+                JOIN detalle_compra dc ON c.id = dc.compra_id
+                WHERE c.usuario_id = ? AND dc.curso_id = ?
+                LIMIT 1
+            """, (usuario_id, id))
+            comprado = cursor.fetchone() is not None
+
+        return jsonify({
+            "success": True,
+            "curso": {
+                "id": curso["id"],
+                "codigo": curso["codigo"],
+                "titulo": curso["titulo"],
+                "descripcion": curso["descripcion"],
+                "nivel": curso["nivel"],
+                "duracion": curso["duracion"],
+                "precio": curso["precio"],
+                "fecha_creacion": curso["fecha_creacion"],
+                "rating_promedio": curso["rating_promedio"],
+                "activo": bool(curso["activo"]),
+                "temas": temas,
+                "comprado": comprado
+            }
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "mensaje": f"Error interno: {str(e)}"
+        }), 500
+
+    finally:
+        conn.close()
+
+# === Endpoint para agregar un curso al carrito ===
+@app.route("/api/carrito", methods=["POST"])
+def agregar_al_carrito():
+    data = request.get_json()
+
+    if not data or "usuario_id" not in data or "curso_id" not in data:
+        return jsonify({"success": False, "mensaje": "Faltan campos requeridos."}), 400
+
+    usuario_id = data["usuario_id"]
+    curso_id = data["curso_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar que el usuario existe
+    cursor.execute("SELECT id FROM usuarios WHERE id = ?", (usuario_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Usuario con id {usuario_id} no existe."}), 404
+
+    # Verificar que el curso existe
+    cursor.execute("SELECT id FROM cursos WHERE id = ?", (curso_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Curso con id {curso_id} no existe."}), 404
+
+    # Verificar si ya está en el carrito
+    cursor.execute("""
+        SELECT id FROM carrito WHERE usuario_id = ? AND curso_id = ?
+    """, (usuario_id, curso_id))
+    if cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "mensaje": "El curso ya está en el carrito."}), 409
+
+    # Insertar en la tabla carrito
+    cursor.execute("""
+        INSERT INTO carrito (usuario_id, curso_id) VALUES (?, ?)
+    """, (usuario_id, curso_id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Curso {curso_id} añadido al carrito del usuario {usuario_id}."
+    }), 201
+
+# === Endpoint para obtener el carrito de un usuario ===
+@app.route('/api/carrito/<int:usuario_id>', methods=['GET'])
+def obtener_carrito(usuario_id):
+    conn = get_db_connection()
+    
+    # Verificar si el usuario existe
+    user = conn.execute('SELECT * FROM usuarios WHERE id = ?', (usuario_id,)).fetchone()
+    if user is None:
+        conn.close()
+        return jsonify({"success": False, "mensaje": f"Usuario con id {usuario_id} no encontrado."}), 404
+
+    # Obtener los cursos en el carrito
+    cursos = conn.execute('''
+        SELECT 
+            cursos.id,
+            cursos.titulo,
+            cursos.descripcion,
+            cursos.nivel,
+            cursos.precio,
+            carrito.fecha_agregado
+        FROM carrito
+        JOIN cursos ON carrito.curso_id = cursos.id
+        WHERE carrito.usuario_id = ?
+    ''', (usuario_id,)).fetchall()
+    
+    conn.close()
+
+    # Armar lista de resultados
+    cursos_json = [
+        {
+            "id": curso["id"],
+            "titulo": curso["titulo"],
+            "descripcion": curso["descripcion"],
+            "nivel": curso["nivel"],
+            "precio": curso["precio"],
+            "fecha_agregado": curso["fecha_agregado"].split(" ")[0]  # Solo fecha
+        }
+        for curso in cursos
+    ]
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Carrito del usuario con id {usuario_id} obtenido exitosamente.",
+        "cursos": cursos_json
+    })
 
 
 
