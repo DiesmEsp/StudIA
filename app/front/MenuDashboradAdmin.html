@@ -3,40 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <title>Menu Dashboard Admin</title>
+    <script src="./js/DashBoard.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="grafico.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <div class ="menu-dashboard">
-        <div class = "top-menu">
-            <div class = "logo">
-                <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
-                <span>StudIA</span>
-            </div>
-        </div>
-        <div class = "toggle">
-            <i class='bx  bx-menu'  ></i>
-        </div>
-        <div class = "input-search">
-            <i class='bx  bx-search'  ></i>
-            <input type="text" placeholder="Buscar" class = "input">
-        </div>
-        <div class="menu">
-            <div class="enlace">
-                <i class='bx bx-grid-alt' ></i>
-                <span>Estadisticas</span>
-            </div>
-
-            <div class="enlace">
-                <i class='bx bx-grid-alt' ></i>
-                <span>Agregar Cursos</span>
-            </div>
-
-            <div class="enlace">
-                <i class='bx bx-grid-alt' ></i>
-                <span>Modificar Cursos</span>
-            </div>
-
+<!-- Menú lateral existente -->
+<div class="menu-dashboard open">
+    <div class="top-menu">
+        <div class="logo">
+            <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
+            <span>StudIA</span>
         </div>
     </div>
+    <div class="toggle">
+        <i class='bx bx-menu'></i>
+    </div>
+
+    <div class="menu">
+
+        <div class = "toggle">
+            <a href = "MenuDashboradAdmin.html">
+                <div class="enlace">
+
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Estadísticas</span>
+                </div>
+            </a>
+        </div>
+
+        <div class = "toggle">
+            <a href = "AgregarCursos.html">
+                <div class="enlace">
+                    <i class='bx bx-plus-circle'></i>
+                    <span>Agregar Cursos</span>
+                </div>
+            </a>
+        </div>
+        <div class ="toggle">
+            <a href = "ModificarCursos.html">
+                <div class="enlace">
+                    <i class='bx bx-edit-alt'></i>
+                    <span>Modificar Cursos</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<main>
+    <h1>Dashboard de Estadísticas</h1>
+
+    <div class="charts-grid">
+        <div class="chart-container">
+            <canvas id="cursosChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="temasChart"></canvas>
+        </div>
+        <div class="chart-container full-width">
+            <canvas id="comprasChart"></canvas>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Datos de ejemplo para los gráficos
+    const cursosData = {
+        labels: ['Curso Python', 'Curso JavaScript', 'Curso Java'],
+        datasets: [{
+            data: [30, 25, 20],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56',]
+        }]
+    };
+
+    const temasData = {
+        labels: ['Programación', 'Base de Datos', 'Web', 'IA', 'Cloud'],
+        datasets: [{
+            label: 'Cantidad de Cursos',
+            data: [12, 19, 15, 8, 10],
+            backgroundColor: '#36A2EB'
+        }]
+    };
+
+    const comprasData = {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Volumen de Compras',
+            data: [65, 59, 80, 81, 56, 55],
+            backgroundColor: '#FFCE56'
+        }]
+    };
+
+    // Crear los gráficos
+    window.onload = function() {
+        // Gráfico circular de cursos
+        new Chart('cursosChart', {
+            type: 'pie',
+            data: cursosData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top 3 Cursos Más Comprados'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de barras de temas
+        new Chart('temasChart', {
+            type: 'bar',
+            data: temasData,
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top 5 Temas Más Asignados'
+                    }
+                },
+                scales:{
+                    x:{
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Histograma de compras por mes
+        new Chart('comprasChart', {
+            type: 'bar',
+            data: comprasData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Volumen de Compras por Mes'
+                    }
+                }
+            }
+        });
+    };
+</script>
+
 </body>
 </html>

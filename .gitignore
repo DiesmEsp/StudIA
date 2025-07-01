@@ -1,2 +1,5 @@
 # Ignorar la carpeta .idea de JetBrains (IDEs como PyCharm, IntelliJ)
 .idea/
+node_modules/
+package.json
+package-lock.json
