@@ -15,6 +15,6 @@ Este archivo enumera los endpoints que aún deben implementarse, agrupados por l
 | [x] `POST /api/carrito`              | Agregar un curso al carrito del usuario          | `course_info.html`      |
 | [x] `GET /api/carrito/{usuario_id}`  | Ver el contenido actual del carrito              | `carrito.html`          |
 | [x] `DELETE /api/carrito/{curso_id}` | Eliminar curso del carrito                       | `carrito.html`          |
-| [ ] `POST /api/comprar`              | Procesar los cursos del carrito como compra      | `carrito.html`          |
+| [x] `POST /api/comprar`              | Procesar los cursos del carrito como compra      | `carrito.html`          |
 
 ---
