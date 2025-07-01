@@ -559,7 +559,74 @@ def eliminar_curso_carrito(usuario_id):
         "mensaje": f"Curso con id {curso_id} eliminado del carrito del usuario {usuario_id}."
     }), 200
 
+# === Endpoint para procesar la compra ===
+import random
+import string
 
+def generar_voucher(longitud=5):
+    caracteres = string.ascii_uppercase + string.digits
+    return ''.join(random.choices(caracteres, k=longitud))
+
+@app.route('/api/comprar', methods=['POST'])
+def procesar_compra():
+    data = request.get_json()
+    usuario_id = data.get('usuario_id')
+
+    if not usuario_id:
+        return jsonify({
+            "success": False,
+            "mensaje": "Falta el campo usuario_id."
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Obtener cursos en el carrito
+    cursor.execute('''
+        SELECT curso_id, precio
+        FROM carrito
+        JOIN cursos ON carrito.curso_id = cursos.id
+        WHERE carrito.usuario_id = ?
+    ''', (usuario_id,))
+    cursos = cursor.fetchall()
+
+    if not cursos:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": "No hay cursos en el carrito para procesar."
+        }), 400
+
+    total = sum(curso["precio"] for curso in cursos)
+    voucher = generar_voucher()
+
+    # Insertar en tabla compras
+    cursor.execute('''
+        INSERT INTO compras (usuario_id, total, voucher)
+        VALUES (?, ?, ?)
+    ''', (usuario_id, total, voucher))
+    compra_id = cursor.lastrowid
+
+    # Insertar en detalle_compra
+    for curso in cursos:
+        cursor.execute('''
+            INSERT INTO detalle_compra (compra_id, curso_id, precio_pagado)
+            VALUES (?, ?, ?)
+        ''', (compra_id, curso["curso_id"], curso["precio"]))
+
+    # Vaciar el carrito
+    cursor.execute('DELETE FROM carrito WHERE usuario_id = ?', (usuario_id,))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Compra procesada con éxito para el usuario {usuario_id}.",
+        "compra_id": compra_id,
+        "total": total,
+        "voucher": voucher
+    }), 200
 
 # === Iniciar la app ===
 if __name__ == "__main__":
