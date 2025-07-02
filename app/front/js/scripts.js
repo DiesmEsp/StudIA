@@ -93,7 +93,7 @@ function showPopup() {
     popup.innerHTML = `
         <div class="popup-content">
             <img src="images/ups.png" alt="Ups" class="popup-img">
-            <p>Lo sentimos. Este curso no tiene un sílabus disponible por el momento.</p>
+            <p><b>😢 Lo sentimos 😢</b><br><br>Este curso no tiene un sílabus<br>disponible por el momento.</p>
             <button class="popup-btn" onclick="closePopup()">Ok</button>
         </div>
     `;

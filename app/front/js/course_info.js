@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 nivelElem.id = "course-nivel";
                 document.getElementById("course-name").after(nivelElem);
             }
-            nivelElem.textContent = `Nivel: ${capitalizeFirst(curso.nivel)}`;
+            nivelElem.innerHTML = `<b>Nivel:</b> ${capitalizeFirst(curso.nivel)}`;
 
             document.getElementById("course-description").textContent = curso.descripcion;
 
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (typeof showPopup === "function") {
                             showPopup();
                         } else {
-                            alert("Lo sentimos. Este curso no tiene un sílabus disponible por el momento.");
+                            alert("Lo sentimos.\nEste curso no tiene un sílabus disponible por el momento.");
                         }
                     };
                 }
@@ -165,21 +165,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const tituloTemas = document.createElement("h4");
                 tituloTemas.textContent = "Temas del curso:";
+                tituloTemas.style.marginBottom = "5px"; // reduce espacio
                 temasDiv.appendChild(tituloTemas);
 
-                const ul = document.createElement("ul");
+                // Crear los temas sin usar <ul> ni <li>
                 curso.temas.forEach(tema => {
-                    const li = document.createElement("li");
-                    li.textContent = tema;
-                    ul.appendChild(li);
+                    const temaDiv = document.createElement("div");
+                    const temaCapitalizado = tema.charAt(0).toUpperCase() + tema.slice(1);
+                    
+                    // Agregar el ícono de ✔︎ y el tema con formato
+                    temaDiv.innerHTML = `✔︎ <span class="tema-text">${temaCapitalizado}</span>`;
+                    temaDiv.style.marginBottom = "8px"; // Espacio entre los temas
+                    temaDiv.style.fontSize = "1.1em"; // Ajustar tamaño de texto
+                    temaDiv.style.fontWeight = "normal"; // Peso de texto normal
+                    temaDiv.style.color = "#333"; // Color del texto
+                    temaDiv.style.paddingLeft = "20px"; // Agregar tabulación antes del texto
+
+                    temasDiv.appendChild(temaDiv);
                 });
 
-                temasDiv.appendChild(ul);
-
-                // Fecha de publicación (formateada)
+                // Fecha de publicación
                 const fechaP = document.createElement("p");
                 fechaP.style.marginTop = "15px";
-                fechaP.textContent = "Fecha de publicación: " + formatFecha(curso.fecha_creacion);
+                fechaP.innerHTML = "📅 <strong>Fecha de publicación: </strong>" + formatFecha(curso.fecha_creacion);
                 temasDiv.appendChild(fechaP);
 
                 detallesDiv.appendChild(temasDiv);
@@ -192,7 +200,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 ratingElem.id = "course-rating";
                 detallesDiv.appendChild(ratingElem);
             }
-            ratingElem.innerHTML = `&#9733; ${curso.rating_promedio}`;
+
+            function generarEstrellas(rating) {
+                const maxStars = 5;
+                const fullStars = Math.round(rating);  // redondea a la estrella más cercana
+                const emptyStars = maxStars - fullStars;
+
+                return '⭐'.repeat(fullStars) + '☆'.repeat(emptyStars);
+            }
+
+            ratingElem.innerHTML = `👍 <strong>Valoración:</strong> ${generarEstrellas(curso.rating_promedio)} (${curso.rating_promedio})`;
+
 
             // Duración en horas y minutos
             let duracionElem = document.getElementById("course-duracion");
@@ -201,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 duracionElem.id = "course-duracion";
                 detallesDiv.appendChild(duracionElem);
             }
-            duracionElem.textContent = "Duración: " + minutosAHorasMinutos(curso.duracion);
+            duracionElem.innerHTML = "⏱️ <strong>Duración: </strong>" + minutosAHorasMinutos(curso.duracion);
 
         })
         .catch(err => {

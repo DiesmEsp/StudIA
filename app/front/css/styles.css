@@ -449,6 +449,22 @@ h1 {
     border: 1px solid #ddd;
 }
 
+#course-rating {
+    font-size: 16x;
+    color: #000000; /* Dorado */
+}
+
+.temas {
+    font-family: Arial, sans-serif;  /* Usar Arial como en el resto de la página */
+}
+
+.tema-text {
+    color: #000000;
+    font-size: 16x;
+    font-weight: normal;
+    padding-left: 20px; /* Espacio antes del texto */
+}
+
 /* Footer */
 .footer {
     text-align: center;

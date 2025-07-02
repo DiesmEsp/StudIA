@@ -50,20 +50,35 @@ function renderCart() {
                     circle.classList.add('cart-circle');
                     circle.style.backgroundColor = getRandomPastelColor();
 
+                    // Contenedor de texto
+                    const textContainer = document.createElement('div');
+                    textContainer.className = 'cart-text-container';
+
                     // Nombre del curso
                     const title = document.createElement('span');
                     title.className = 'cart-title';
                     title.textContent = item.titulo;
+
+                    // Precio del curso
+                    const price = document.createElement('span');
+                    price.className = 'cart-price';
+                    price.textContent = `S/. ${item.precio.toFixed(2)}`;
 
                     // Botón eliminar (X)
                     const removeBtn = document.createElement('button');
                     removeBtn.className = 'remove-item-btn';
                     removeBtn.title = 'Eliminar del carrito';
                     removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    removeBtn.onclick = () => removeItem(usuarioId, item.id);
+                    removeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        showDeleteConfirmation(usuarioId, item.id, item.titulo);
+                    };
 
+                    // Estructura
+                    textContainer.appendChild(title);
+                    textContainer.appendChild(price);
                     cartItem.appendChild(circle);
-                    cartItem.appendChild(title);
+                    cartItem.appendChild(textContainer);
                     cartItem.appendChild(removeBtn);
 
                     cartContainer.appendChild(cartItem);
@@ -81,6 +96,31 @@ function renderCart() {
             document.getElementById('cart-items').innerHTML = `<div style="padding: 30px; text-align: center; color: #888;">Error al cargar el carrito.</div>`;
             document.querySelector('.checkout-button').disabled = true;
         });
+}
+
+// Función para mostrar confirmación de eliminación
+function showDeleteConfirmation(usuarioId, cursoId, cursoNombre) {
+    const modal = document.createElement('div');
+    modal.className = 'confirmation-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h3>¿Eliminar curso?</h3>
+            <p>¿Estás seguro que deseas eliminar <strong>"${cursoNombre}"</strong> de tu carrito?</p>
+            <div class="modal-buttons">
+                <button class="cancel-btn">Cancelar</button>
+                <button class="confirm-btn">Sí, eliminar</button>
+            </div>
+        </div>
+    `;
+    
+    // Event listeners para los botones
+    modal.querySelector('.cancel-btn').onclick = () => modal.remove();
+    modal.querySelector('.confirm-btn').onclick = () => {
+        modal.remove();
+        removeItem(usuarioId, cursoId);
+    };
+    
+    document.body.appendChild(modal);
 }
 
 // Elimina un curso del carrito
@@ -151,7 +191,6 @@ if (yapeInput) {
         if (val.length === 6) {
             if (YAPE_CODES.includes(val)) {
                 yapeError.textContent = '';
-                // Simula el pago: limpia el carrito y muestra éxito
                 simularPago();
             } else {
                 yapeError.textContent = 'Código inválido';
@@ -174,34 +213,89 @@ function updateYapeX(val) {
     }
 }
 
-// Simula el pago: limpia el carrito y muestra éxito
+// Función mejorada para simular pago
 function simularPago() {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
-    const usuarioId = usuario?.id;
-    if (!usuarioId) return;
+    if (!usuario?.id) return;
 
-    // Llama al backend para procesar la compra
-    fetch(`http://127.0.0.1:5000/api/comprar`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ usuario_id: usuarioId })
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("Respuesta del servidor:", data);  // Ver la respuesta completa
-        if (data.success) {
-            yapeModal.style.display = 'none';
-            renderCart();  // Limpia el carrito después de la compra
-            alert("¡Pago realizado con éxito! Tus cursos han sido comprados.");
-        } else {
-            yapeModal.style.display = 'none';
-            alert("Ocurrió un error al procesar el pago: " + data.mensaje);
-        }
-    })
-    .catch(() => {
-        yapeModal.style.display = 'none';
-        alert("Ocurrió un error al procesar el pago.");
-    });
+    // 1. Cerrar el modal de Yape primero
+    if (yapeModal) yapeModal.style.display = 'none';
+    
+    // 2. Mostrar modal de procesamiento
+    showProcessingModal();
+    
+    // 3. Simular procesamiento durante 5 segundos
+    setTimeout(() => {
+        // Ocultar modal de procesamiento
+        hideProcessingModal();
+        
+        // Procesar el pago con el backend
+        fetch(`http://127.0.0.1:5000/api/comprar`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario_id: usuario.id })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar éxito después del procesamiento
+                showSuccessModal();
+                renderCart();
+            } else {
+                showErrorModal(data.mensaje || "Error al procesar el pago");
+            }
+        })
+        .catch(error => {
+            showErrorModal("Error de conexión con el servidor");
+        });
+    }, 5000); // 5 segundos de espera
+}
+
+// Modal de procesamiento
+function showProcessingModal() {
+    const modal = document.createElement('div');
+    modal.className = 'processing-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <h3>Procesando tu pago...</h3>
+            <p>Por favor espera unos momentos</p>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function hideProcessingModal() {
+    const modal = document.querySelector('.processing-modal');
+    if (modal) modal.remove();
+}
+
+// Modal de éxito
+function showSuccessModal() {
+    const modal = document.createElement('div');
+    modal.className = 'success-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="success-icon">🎉</div>
+            <h3>¡Pago exitoso!</h3>
+            <p>Tus cursos han sido comprados correctamente.</p>
+            <button onclick="this.closest('.success-modal').remove()">Aceptar</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// Modal de error
+function showErrorModal(message) {
+    const modal = document.createElement('div');
+    modal.className = 'error-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="error-icon">⚠️</div>
+            <h3>Error en el pago</h3>
+            <p>${message}</p>
+            <button onclick="this.closest('.error-modal').remove()">Aceptar</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }
