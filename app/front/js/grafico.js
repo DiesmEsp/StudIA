@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     title: {
                         display: true,
-                        text: '3 cursos más comprados',
+                        text: 'Top 3 cursos más comprados',
                         font: {
                             size: 16
                         }
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     title: {
                         display: true,
-                        text: '5 temas más utilizados',
+                        text: 'Top 5 temas más utilizados',
                         font: {
                             size: 16
                         }
