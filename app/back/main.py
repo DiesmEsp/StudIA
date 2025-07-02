@@ -371,8 +371,9 @@ def obtener_detalle_curso(id):
         # Buscar datos del curso
         cursor.execute("""
             SELECT id, codigo, titulo, descripcion, nivel, duracion,
-                   precio, DATE(fecha_creacion) AS fecha_creacion,
-                   rating_promedio, activo
+                precio, DATE(fecha_creacion) AS fecha_creacion,
+                rating_promedio, activo,
+                silabo_url, contenido_url
             FROM cursos
             WHERE id = ?
         """, (id,))
@@ -415,6 +416,8 @@ def obtener_detalle_curso(id):
                 "fecha_creacion": curso["fecha_creacion"],
                 "rating_promedio": curso["rating_promedio"],
                 "activo": bool(curso["activo"]),
+                "silabo_url": curso["silabo_url"],
+                "contenido_url": curso["contenido_url"],
                 "temas": temas,
                 "comprado": comprado
             }
@@ -714,7 +717,101 @@ def obtener_estadisticas():
         }
     })
 
+# === Endpoint para agregar un nuevo curso (admin) ===
+@app.route('/api/admin/curso', methods=['POST'])
+def agregar_curso():
+    data = request.get_json()
 
+    campos_requeridos = ['titulo', 'descripcion', 'nivel', 'duracion', 'precio']
+    if not all(campo in data for campo in campos_requeridos):
+        return jsonify({"success": False, "mensaje": "Faltan campos obligatorios"}), 400
+
+    # Campos opcionales
+    silabo_url = data.get("silabo_url", "")
+    contenido_url = data.get("contenido_url", "")
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Obtener próximo ID
+        cur.execute("SELECT seq + 1 FROM sqlite_sequence WHERE name = 'cursos'")
+        row = cur.fetchone()
+        next_id = row[0] if row and row[0] is not None else 1
+
+        codigo = f"C{next_id}"
+
+        cur.execute("""
+            INSERT INTO cursos (
+                codigo, titulo, descripcion, nivel, duracion,
+                precio, rating_promedio, silabo_url, contenido_url
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            codigo,
+            data["titulo"],
+            data["descripcion"],
+            data["nivel"],
+            data["duracion"],
+            data["precio"],
+            2.5,
+            silabo_url,
+            contenido_url
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({"success": True, "mensaje": "Curso agregado correctamente", "codigo": codigo}), 201
+
+    except Exception as e:
+        return jsonify({"success": False, "mensaje": str(e)}), 500
+
+# === Endpoint para modificar un curso (admin) ===
+@app.route('/api/admin/curso/<int:curso_id>', methods=['PUT'])
+def modificar_curso(curso_id):
+    data = request.get_json()
+
+    # Verificar si el curso existe
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM cursos WHERE id = ?", (curso_id,))
+    curso_existente = cur.fetchone()
+
+    if not curso_existente:
+        conn.close()
+        return jsonify({"success": False, "mensaje": "El curso no existe"}), 404
+
+    # Campos permitidos a modificar, incluyendo los nuevos
+    campos = ['titulo', 'descripcion', 'nivel', 'duracion', 'precio', 'silabo_url', 'contenido_url']
+    actualizaciones = []
+    valores = []
+
+    for campo in campos:
+        if campo in data:
+            actualizaciones.append(f"{campo} = ?")
+            valores.append(data[campo])
+
+    if not actualizaciones:
+        conn.close()
+        return jsonify({"success": False, "mensaje": "No se proporcionaron campos válidos para modificar"}), 400
+
+    valores.append(curso_id)
+
+    try:
+        cur.execute(f"""
+            UPDATE cursos
+            SET {', '.join(actualizaciones)}
+            WHERE id = ?
+        """, valores)
+        conn.commit()
+        conn.close()
+
+        return jsonify({"success": True, "mensaje": "Curso modificado correctamente"}), 200
+
+    except Exception as e:
+        conn.close()
+        return jsonify({"success": False, "mensaje": str(e)}), 500
 
 # === Iniciar la app ===
 if __name__ == "__main__":
