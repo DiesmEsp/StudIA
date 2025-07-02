@@ -441,12 +441,14 @@ h1 {
     background-color: #45a049;
 }
 
+/* Select de ordenamiento (más compacto) */
 #sort-options {
-    margin-top: 20px;
+    width: 220px;
     padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
     border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: white;
 }
 
 #course-rating {
@@ -463,6 +465,53 @@ h1 {
     font-size: 16x;
     font-weight: normal;
     padding-left: 20px; /* Espacio antes del texto */
+}
+
+/* Contenedor principal de controles */
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap; /* Para responsive */
+}
+
+/* Barra de búsqueda (un poco más ancha) */
+.search-input {
+    width: 350px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Checkbox (alineación perfecta) */
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0; /* Pequeño ajuste vertical */
+}
+
+#filter-comprados {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.search-input:focus, #sort-options:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.filter-checkbox input[type="checkbox"] {
+    accent-color: #4CAF50; /* Color verde cuando está activo */
 }
 
 /* Footer */

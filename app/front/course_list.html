@@ -31,15 +31,24 @@
     <div class="container">
         <div class="left-side">
             <h2>¡Los mejores cursos de programación en un solo lugar!</h2>
-            <select id="sort-options">
-                <option value="most-popular" selected>Más populares</option>
-                <option value="least-popular">Menos populares</option>
-                <option value="most-recent">Más recientes</option>
-                <option value="least-recent">Menos recientes</option>
-            </select>
-            <label>
-                <input type="checkbox" id="filter-comprados"> Comprados
-            </label>
+            <div class="search-controls">
+                <!-- Barra de búsqueda -->
+                <input type="text" id="course-search" placeholder="Buscar cursos..." class="search-input">
+                
+                <!-- Select de ordenamiento -->
+                <select id="sort-options">
+                    <option value="most-popular" selected>Más populares</option>
+                    <option value="least-popular">Menos populares</option>
+                    <option value="most-recent">Más recientes</option>
+                    <option value="least-recent">Menos recientes</option>
+                </select>
+                
+                <!-- Checkbox (envuelto en un div para mejor alineación) -->
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-comprados">
+                    <label for="filter-comprados">Comprados</label>
+                </div>
+            </div>
 
             <div id="course-list">
                 <!-- Los cursos se cargarán aquí -->
