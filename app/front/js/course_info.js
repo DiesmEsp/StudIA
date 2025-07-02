@@ -10,6 +10,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     const usuarioId = usuario?.id;
 
+    // Añade esto al principio del archivo
+    function setupPurchasedCourseButton(button, curso) {
+        button.textContent = "Ver curso";
+        button.disabled = false;
+        button.style.backgroundColor = "#4CAF50";
+        button.style.cursor = "pointer";
+        button.onclick = () => curso.contenido_url && window.open(curso.contenido_url, "_blank");
+        button.onmouseover = null;
+        button.onmouseout = null;
+    }
+
     // Construye la URL según si hay usuario logueado
     const url = usuarioId
         ? `http://127.0.0.1:5000/api/curso/${cursoId}?usuario_id=${usuarioId}`
@@ -64,15 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!this.disabled) this.textContent = precioTexto;
                 };
             } else if (curso.comprado) {
-                // Caso 3: Ya comprado
-                addToCartBtn.textContent = "Ya comprado";
-                addToCartBtn.disabled = true;
-                addToCartBtn.style.backgroundColor = "#bdbdbd";
-                addToCartBtn.style.cursor = "not-allowed";
-                // LIMPIA eventos SIEMPRE
-                addToCartBtn.onmouseover = null;
-                addToCartBtn.onmouseout = null;
-                addToCartBtn.onclick = null;
+                // CASO 3 MODIFICADO - Curso comprado (ahora es clickeable)
+                setupPurchasedCourseButton(addToCartBtn, curso);
             } else {
                 // Caso 2: ¿Ya en carrito?
                 fetch(`http://127.0.0.1:5000/api/carrito/${usuarioId}`)

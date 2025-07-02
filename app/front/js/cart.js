@@ -193,13 +193,21 @@ if (yapeInput) {
                 yapeError.textContent = '';
                 simularPago();
             } else {
-                yapeError.textContent = 'Código inválido';
+                // Cerrar modal de Yape primero
+                yapeModal.style.display = 'none';
+                yapeInput.value = '';
+                updateYapeX('');
+                
+                // Mostrar procesamiento
+                showProcessingModal();
+                
+                // Después de 5 segundos, volver a mostrar Yape con error
                 setTimeout(() => {
-                    yapeInput.value = '';
-                    updateYapeX('');
-                    yapeError.textContent = '';
+                    hideProcessingModal();
+                    yapeModal.style.display = 'flex';
+                    yapeError.textContent = 'Código inválido. Por favor, intente con otro.';
                     yapeInput.focus();
-                }, 1200);
+                }, 5000);
             }
         }
     });
@@ -242,11 +250,21 @@ function simularPago() {
                 showSuccessModal();
                 renderCart();
             } else {
-                showErrorModal(data.mensaje || "Error al procesar el pago");
+                // Mostrar error y volver a Yape
+                yapeModal.style.display = 'flex';
+                yapeError.textContent = data.mensaje || "Error al procesar el pago";
+                yapeInput.value = '';
+                updateYapeX('');
+                yapeInput.focus();
             }
         })
         .catch(error => {
-            showErrorModal("Error de conexión con el servidor");
+            // Mostrar error y volver a Yape
+            yapeModal.style.display = 'flex';
+            yapeError.textContent = "Error de conexión con el servidor";
+            yapeInput.value = '';
+            updateYapeX('');
+            yapeInput.focus();
         });
     }, 5000); // 5 segundos de espera
 }
