@@ -510,3 +510,28 @@ main {
     color: #333;
 }
 
+.chart-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.menu-dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;         /* ocupa toda la altura de la ventana */
+}
+
+.menu {                    /* la lista de botones principales */
+    flex-grow: 1;          /* se expande y empuja lo que sigue hacia abajo */
+}
+
+.menu-bottom {
+    margin-top: auto;      /* coloca este bloque al final */
+    padding-bottom: 1rem;  /* espacio opcional */
+}
