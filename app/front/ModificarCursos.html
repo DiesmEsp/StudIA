@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <title>ModificarCursos</title>
     <script src="./js/DashBoard.js" defer></script>
-    <script src="js/ModificarCursos.js" defer></script>
-    <script src="js/CargarCurso.js" defer></script>
+    <script src="./js/ModificarCursos.js" defer></script>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-
-
 <!-- Menú lateral existente -->
 <div class="menu-dashboard open">
     <div class="top-menu">
@@ -55,64 +52,64 @@
 
     </div>
 </div>
-
 <main>
-    <div class="form-container">
-        <h2 class="form-title">Crear Nuevo Curso</h2>
-        <form id="createCourseForm">
-            <div class="form-group">
-                <label for="ID">ID del curso</label>
-                <input type="text" id="ID" name="ID" class="form-control" required>
-                <button type="button" id="btnCargar" class="submit-btn">Cargar Curso</button>
-            </div>
+    <div class="course-list-container">
+        <h2 class="form-title">Modificar Cursos</h2>
 
+        <div class="search-box">
+            <i class='bx bx-search'></i>
+            <input type="text" class="search-input" placeholder="Buscar curso...">
+        </div>
 
+        <div class="course-list">
+            <!-- Los cursos se generarán dinámicamente aquí -->
+        </div>
+    </div>
 
-            <div class="form-group">
-                <label for="titulo">Título del Curso</label>
-                <input type="text" id="titulo" name="titulo" class="form-control" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="nivel">Nivel</label>
-                <select id="nivel" name="nivel" class="form-control" required>
-                    <option value="">Seleccione un nivel</option>
-                    <option value="principiante">Principiante</option>
-                    <option value="intermedio">Intermedio</option>
-                    <option value="avanzado">Avanzado</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="duracion">Duración (en horas)</label>
-                <input type="number" id="duracion" name="duracion" class="form-control" min="1" required>
-            </div>
-
-            <div class="form-group">
-                <label for="precio">Precio</label>
-                <div class="currency-input">
-                    <input type="number" id="precio" name="precio" class="form-control" min="0" step="0.01" required>
+    <!-- Modal para editar curso -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <i class='bx bx-x close-modal' id="closeModal"></i>
+            <h3 class="form-title">Editar Curso</h3>
+            <form id="editCourseForm">
+                <div class="form-group">
+                    <label for="titulo">Título del Curso</label>
+                    <input type="text" id="titulo" name="titulo" class="form-control" required>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="video_url">Video URL</label>
-                <input type="url" id="video_url" name="video_url" class="form-control">
-            </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="silabo_url">Silabo URL</label>
-                <input type="url" id="silabo_url" name="silabo_url" class="form-control">
-            </div>
+                <div class="form-group">
+                    <label for="nivel">Nivel</label>
+                    <select id="nivel" name="nivel" class="form-control" required>
+                        <option value="">Seleccione un nivel</option>
+                        <option value="principiante">Principiante</option>
+                        <option value="intermedio">Intermedio</option>
+                        <option value="avanzado">Avanzado</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="submit-btn">Modificar Curso</button>
-        </form>
+                <div class="form-group">
+                    <label for="duracion">Duración (en horas)</label>
+                    <input type="number" id="duracion" name="duracion" class="form-control" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio</label>
+                    <div class="currency-input">
+                        <input type="number" id="precio" name="precio" class="form-control" min="0" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="edit-buttons">
+                    <button type="submit" class="edit-btn">Guardar Cambios</button>
+                    <button type="button" class="delete-btn">Eliminar Curso</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </main>

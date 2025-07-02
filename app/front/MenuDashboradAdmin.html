@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Menu Dashboard Admin</title>
-    <script src="js/DashBoard.js" defer></script>
+    <script src="./js/DashBoard.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/estilos.css">
-    <script src="js/grafico.js"></script>
+    <script src="grafico.js"></script>
     <style>
         .chart-container {
             width: 80%;
@@ -64,16 +64,6 @@
         </div>
 
     </div>
-    <div class="menu-bottom">
-        <div class="toggle">
-            <a href="index.html">
-                <div class="enlace">
-                    <i class='bxr  bx-circle'  ></i>
-                    <span>Salir</span>
-                </div>
-            </a>
-        </div>
-    </div>
 </div>
 
 <main>
@@ -91,6 +81,89 @@
         </div>
     </div>
 </main>
+
+<script>
+    // Datos de ejemplo para los gráficos
+    const cursosData = {
+        labels: ['Curso Python', 'Curso JavaScript', 'Curso Java'],
+        datasets: [{
+            data: [30, 25, 20],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56',]
+        }]
+    };
+
+    const temasData = {
+        labels: ['Programación', 'Base de Datos', 'Web', 'IA', 'Cloud'],
+        datasets: [{
+            label: 'Cantidad de Cursos',
+            data: [12, 19, 15, 8, 10],
+            backgroundColor: '#36A2EB'
+        }]
+    };
+
+    const comprasData = {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Volumen de Compras',
+            data: [65, 59, 80, 81, 56, 55],
+            backgroundColor: '#FFCE56'
+        }]
+    };
+
+    // Crear los gráficos
+    window.onload = function() {
+        // Gráfico circular de cursos
+        new Chart('cursosChart', {
+            type: 'pie',
+            data: cursosData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top 3 Cursos Más Comprados'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de barras de temas
+        new Chart('temasChart', {
+            type: 'bar',
+            data: temasData,
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top 5 Temas Más Asignados'
+                    }
+                },
+                scales:{
+                    x:{
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Histograma de compras por mes
+        new Chart('comprasChart', {
+            type: 'bar',
+            data: comprasData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Volumen de Compras por Mes'
+                    }
+                }
+            }
+        });
+    };
+</script>
 
 </body>
 </html>
