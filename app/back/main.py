@@ -639,6 +639,79 @@ def procesar_compra():
         "voucher": voucher
     }), 200
 
+# === Endpoint para obtener estadísticas de la plataforma ===
+@app.route("/api/admin/estadisticas", methods=["GET"])
+def obtener_estadisticas():
+    conn = get_db_connection()
+
+    # Cursos más comprados
+    cursos = conn.execute("""
+        SELECT c.titulo, COUNT(*) AS total
+        FROM detalle_compra dc
+        JOIN cursos c ON c.id = dc.curso_id
+        GROUP BY c.id
+        ORDER BY total DESC
+        LIMIT 3;
+    """).fetchall()
+    cursos_labels = [c["titulo"] for c in cursos]
+    cursos_data = [c["total"] for c in cursos]
+
+    # Temas más frecuentes
+    temas = conn.execute("""
+        SELECT tema, COUNT(*) AS cantidad
+        FROM curso_temas
+        GROUP BY tema
+        ORDER BY cantidad DESC
+        LIMIT 5;
+    """).fetchall()
+    temas_labels = [t["tema"] for t in temas]
+    temas_data = [t["cantidad"] for t in temas]
+
+    # Compras por mes (últimos 6 meses)
+    compras = conn.execute("""
+        SELECT strftime('%m', fecha_compra) AS mes,
+               strftime('%Y', fecha_compra) AS anio,
+               COUNT(*) AS total
+        FROM compras
+        WHERE fecha_compra >= date('now', '-6 months')
+        GROUP BY anio, mes
+        ORDER BY anio, mes;
+    """).fetchall()
+
+    compras_labels = []
+    compras_data = []
+
+    meses_es = ["", "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+    for row in compras:
+        mes_num = int(row["mes"])
+        mes_nombre = meses_es[mes_num]
+        compras_labels.append(mes_nombre)
+        compras_data.append(row["total"])
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "cursos": {
+                "labels": cursos_labels,
+                "data": cursos_data
+            },
+            "temas": {
+                "labels": temas_labels,
+                "data": temas_data
+            },
+            "compras": {
+                "labels": compras_labels,
+                "data": compras_data
+            }
+        }
+    })
+
+
+
 # === Iniciar la app ===
 if __name__ == "__main__":
     app.run(debug=True)

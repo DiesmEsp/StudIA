@@ -123,3 +123,29 @@ h1 {
 .carrito-btn:hover {
     color: #0077cc;
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    /* Espacio entre iconos y bloque usuario */
+}
+
+.fixed-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    color: #4CAF50;
+}
