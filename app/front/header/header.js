@@ -8,11 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const datos = JSON.parse(localStorage.getItem("usuario"));
 
             if (datos && datos.nombre) {
-                contenedor.innerHTML = `
+                let botones = `
                     <button class="carrito-btn" title="Ir al carrito" onclick="location.href='/carrito.html'">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </button>
+                `;
 
+                // Si es admin, añadir botón al dashboard
+                if (datos.rol === "admin") {
+                    botones += `
+                        <button class="carrito-btn" title="Panel de administración" onclick="location.href='/MenuDashboradAdmin.html'">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </button>
+                    `;
+                }
+
+                botones += `
                     <div class="usuario-bienvenida">
                         <span>👋 ¡Hola, <strong>${datos.nombre}</strong>!</span>
                         <button id="cerrarSesionBtn" class="logout-btn" title="Cerrar sesión">
@@ -20,6 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         </button>
                     </div>
                 `;
+
+                contenedor.innerHTML = botones;
 
                 document.getElementById("cerrarSesionBtn").addEventListener("click", () => {
                     if (confirm("¿Cerrar sesión?")) {
