@@ -138,22 +138,22 @@ document.addEventListener("DOMContentLoaded", () => {
             // Imagen
             document.getElementById("course-img").src = curso.imagen || "images/img4.png";
 
-            // PDF
+            // Botón PDF - Versión mejorada
             const pdfBtn = document.getElementById("pdf-btn");
             if (pdfBtn) {
-                if (curso.pdf_url) {
+                if (curso.silabo_url) {
                     pdfBtn.style.display = "inline-block";
-                    pdfBtn.onclick = function () {
-                        window.open(curso.pdf_url, "_blank");
+                    pdfBtn.onclick = function() {
+                        // Abre el PDF en nueva pestaña
+                        window.open(curso.silabo_url, "_blank");
+                        
+                        // Opcional: Si prefieres visualizador embebido
+                        // window.open(`/pdf-viewer.html?url=${encodeURIComponent(curso.silabo_url)}`, "_blank");
                     };
                 } else {
                     pdfBtn.style.display = "inline-block";
-                    pdfBtn.onclick = function () {
-                        if (typeof showPopup === "function") {
-                            showPopup();
-                        } else {
-                            alert("Lo sentimos.\nEste curso no tiene un sílabus disponible por el momento.");
-                        }
+                    pdfBtn.onclick = function() {
+                        showPopup(); // Muestra el popup existente de "Lo sentimos"
                     };
                 }
             }
