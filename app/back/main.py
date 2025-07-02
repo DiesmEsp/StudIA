@@ -522,6 +522,198 @@ def obtener_carrito(usuario_id):
         "cursos": cursos_json
     })
 
+# === Endpoint para eliminar un curso del carrito ===
+@app.route('/api/carrito/<int:usuario_id>', methods=['DELETE'])
+def eliminar_curso_carrito(usuario_id):
+    curso_id = request.args.get('curso_id', type=int)
+
+    if not curso_id:
+        return jsonify({
+            "success": False,
+            "mensaje": "Falta el parámetro curso_id en la URL."
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar si el curso está en el carrito del usuario
+    cursor.execute(
+        "SELECT id FROM carrito WHERE usuario_id = ? AND curso_id = ?",
+        (usuario_id, curso_id)
+    )
+    item = cursor.fetchone()
+
+    if not item:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": f"El curso con id {curso_id} no está en el carrito del usuario {usuario_id}."
+        }), 404
+
+    # Eliminar el curso del carrito
+    cursor.execute(
+        "DELETE FROM carrito WHERE usuario_id = ? AND curso_id = ?",
+        (usuario_id, curso_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Curso con id {curso_id} eliminado del carrito del usuario {usuario_id}."
+    }), 200
+
+# === Endpoint para procesar la compra ===
+import random
+import string
+
+def generar_voucher(longitud=5):
+    caracteres = string.ascii_uppercase + string.digits
+    return ''.join(random.choices(caracteres, k=longitud))
+
+@app.route('/api/comprar', methods=['POST'])
+def procesar_compra():
+    data = request.get_json()
+    usuario_id = data.get('usuario_id')
+
+    if not usuario_id:
+        return jsonify({
+            "success": False,
+            "mensaje": "Falta el campo usuario_id."
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verificar que el usuario exista
+    cursor.execute('SELECT id FROM usuarios WHERE id = ?', (usuario_id,))
+    usuario = cursor.fetchone()
+
+    if not usuario:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": f"El usuario con id {usuario_id} no existe."
+        }), 404
+
+    # Obtener cursos en el carrito
+    cursor.execute('''
+        SELECT curso_id, precio
+        FROM carrito
+        JOIN cursos ON carrito.curso_id = cursos.id
+        WHERE carrito.usuario_id = ?
+    ''', (usuario_id,))
+    cursos = cursor.fetchall()
+
+    if not cursos:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "mensaje": "No hay cursos en el carrito para procesar."
+        }), 400
+
+    total = sum(curso["precio"] for curso in cursos)
+    voucher = generar_voucher()
+
+    # Insertar en tabla compras
+    cursor.execute('''
+        INSERT INTO compras (usuario_id, total, voucher)
+        VALUES (?, ?, ?)
+    ''', (usuario_id, total, voucher))
+    compra_id = cursor.lastrowid
+
+    # Insertar en detalle_compra
+    for curso in cursos:
+        cursor.execute('''
+            INSERT INTO detalle_compra (compra_id, curso_id, precio_pagado)
+            VALUES (?, ?, ?)
+        ''', (compra_id, curso["curso_id"], curso["precio"]))
+
+    # Vaciar el carrito
+    cursor.execute('DELETE FROM carrito WHERE usuario_id = ?', (usuario_id,))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "mensaje": f"Compra procesada con éxito para el usuario {usuario_id}.",
+        "compra_id": compra_id,
+        "total": total,
+        "voucher": voucher
+    }), 200
+
+# === Endpoint para obtener estadísticas de la plataforma ===
+@app.route("/api/admin/estadisticas", methods=["GET"])
+def obtener_estadisticas():
+    conn = get_db_connection()
+
+    # Cursos más comprados
+    cursos = conn.execute("""
+        SELECT c.titulo, COUNT(*) AS total
+        FROM detalle_compra dc
+        JOIN cursos c ON c.id = dc.curso_id
+        GROUP BY c.id
+        ORDER BY total DESC
+        LIMIT 3;
+    """).fetchall()
+    cursos_labels = [c["titulo"] for c in cursos]
+    cursos_data = [c["total"] for c in cursos]
+
+    # Temas más frecuentes
+    temas = conn.execute("""
+        SELECT tema, COUNT(*) AS cantidad
+        FROM curso_temas
+        GROUP BY tema
+        ORDER BY cantidad DESC
+        LIMIT 5;
+    """).fetchall()
+    temas_labels = [t["tema"] for t in temas]
+    temas_data = [t["cantidad"] for t in temas]
+
+    # Compras por mes (últimos 6 meses)
+    compras = conn.execute("""
+        SELECT strftime('%m', fecha_compra) AS mes,
+               strftime('%Y', fecha_compra) AS anio,
+               COUNT(*) AS total
+        FROM compras
+        WHERE fecha_compra >= date('now', '-6 months')
+        GROUP BY anio, mes
+        ORDER BY anio, mes;
+    """).fetchall()
+
+    compras_labels = []
+    compras_data = []
+
+    meses_es = ["", "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+    for row in compras:
+        mes_num = int(row["mes"])
+        mes_nombre = meses_es[mes_num]
+        compras_labels.append(mes_nombre)
+        compras_data.append(row["total"])
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "cursos": {
+                "labels": cursos_labels,
+                "data": cursos_data
+            },
+            "temas": {
+                "labels": temas_labels,
+                "data": temas_data
+            },
+            "compras": {
+                "labels": compras_labels,
+                "data": compras_data
+            }
+        }
+    })
+
 
 
 # === Iniciar la app ===

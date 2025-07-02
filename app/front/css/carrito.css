@@ -1,0 +1,463 @@
+/* ===== [TU CSS ORIGINAL] ===== */
+/* Fuente y tamaño base para el carrito */
+body, .carrito-main-container {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background: #f4f4f4;
+}
+
+/* Contenedor principal del carrito */
+.carrito-main-container {
+    max-width: 1100px;
+    margin: 40px auto 0 auto;
+    padding: 0 20px;
+}
+
+.carrito-title {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    color: #222;
+}
+
+.carrito-content {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.carrito-lista {
+    flex: 2;
+    min-width: 320px;
+}
+
+#cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    padding: 12px 16px;
+    transition: box-shadow 0.2s;
+    position: relative;
+}
+
+.cart-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+}
+
+.cart-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin-right: 14px;
+    flex-shrink: 0;
+    border: 2px solid #eee;
+}
+
+.cart-text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+}
+
+.cart-price {
+    font-size: 14px;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 18px;
+    margin-left: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-item-btn:hover {
+    background: #ffeaea;
+    color: #c0392b;
+}
+
+/* Resumen de la orden */
+.carrito-resumen {
+    flex: 1;
+    min-width: 240px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    padding: 20px 22px;
+    font-size: 15px;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.carrito-resumen h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #222;
+}
+
+.resumen-detalles {
+    margin: 1rem 0;
+}
+
+.resumen-linea {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 15px;
+}
+
+.resumen-linea.total {
+    font-weight: bold;
+    color: #222;
+    font-size: 16px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 14px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.checkout-button:disabled {
+    background: #bdbdbd;
+    cursor: not-allowed;
+}
+
+.checkout-button:not(:disabled):hover {
+    background: #388e3c;
+}
+
+@media (max-width: 900px) {
+    .carrito-content {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .carrito-resumen {
+        margin-top: 18px;
+    }
+}
+
+/* Modal Yape */
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+@font-face {
+    font-family: 'ComicShannsMono', sans-serif;
+    src: url('fonts/ComicShannsMono.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.yape-modal-bg {
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yape-modal {
+    background: #5f0b72;
+    border-radius: 18px;
+    padding: 36px 32px 32px 32px;
+    min-width: 340px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.yape-logo {
+    width: 64px;
+    margin-bottom: 18px;
+}
+
+.yape-titulo {
+    color: #fff;
+    font-family: 'Lilita One', cursive, Arial, sans-serif;
+    font-size: 1.35rem;
+    text-align: center;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.yape-input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+#yape-x-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.yape-x {
+    font-family: 'Comic Shanns', 'Comic Sans MS', cursive, sans-serif;
+    font-size: 2.2rem;
+    color: #bdbdbd;
+    width: 32px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 3px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.yape-x.filled {
+    color: #5f0b72;
+    border-bottom: 3px solid #5f0b72;
+}
+
+.yape-error {
+    color: #ffb3c6;
+    font-family: 'Lilita One', Arial, sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    min-height: 24px;
+    margin-bottom: 0;
+}
+
+.yape-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.2s;
+}
+
+.yape-close-btn:hover {
+    color: #ffb3c6;
+}
+
+/* ===== [NUEVOS ESTILOS] ===== */
+/* Modal de confirmación */
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirmation-modal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    width: 90%;
+    animation: fadeIn 0.3s;
+}
+
+.confirmation-modal h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.confirmation-modal p {
+    color: #666;
+    margin: 10px 0 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-buttons .cancel-btn {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal-buttons .cancel-btn:hover {
+    background: #e0e0e0;
+}
+
+.modal-buttons .confirm-btn {
+    background: #f44336;
+    color: white;
+}
+
+.modal-buttons .confirm-btn:hover {
+    background: #d32f2f;
+}
+
+/* Modal de procesamiento */
+.processing-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Mayor que el modal de Yape */
+}
+
+.processing-modal .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: modalFadeIn 0.4s;
+}
+
+.processing-modal .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.processing-modal h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.processing-modal p {
+    color: #666;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Modal de éxito (popup) */
+.success-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 320px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1002;
+    animation: modalFadeIn 0.4s;
+}
+
+.success-modal .success-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.success-modal h3 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.success-modal p {
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.success-modal button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.success-modal button:hover {
+    background: #3d8b40;
+}
+
+/* Animaciones */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

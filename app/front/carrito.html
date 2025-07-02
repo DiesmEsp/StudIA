@@ -1,76 +1,74 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StudIA - Carrito</title>
-  <link rel="stylesheet" href="css/StyleIndex.css">
-
-  <link rel="stylesheet" href="header/header.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/carrito.css">
+    <link rel="stylesheet" href="header/header.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
+<body id="carrito-page">
+    <!-- Header dinámico -->
+    <div id="shared-header"></div>
 
-<body>
-  <!-- <div class="titulo-principal">
-    <h1 class="titulo">StudIA</h1>
-  </div> -->
-
-  <!-- <header class="header">
-    <div class="logo-container">
-      <img src="images/logo_studia.png" alt="StudIA Logo" class="logo">
-      <h1>StudIA</h1>
-    </div>
-    <div class="search-container">
-      <input type="text" placeholder="Buscar">
-      <img src="images/lupa.png" alt="Buscar" class="lupa">
-    </div>
-    <nav class="nav-links">
-      <a href="quienes-somos">Quienes Somos</a>
-      <a href="#Contacto">Contacto</a>
-      <a href="InicioSesion.html" class="access-button">Acceder</a>
-    </nav>
-  </header> -->
-  <div id="shared-header"></div>
-
-  <section class="carrito-section">
-    <div class="carrito-container">
-      <h2>Tu Carrito de Compras</h2>
-
-      <div class="carrito-items">
-        <div class="carrito-vacio">
-          <img src="images/carrito-vacio.png" alt="Carrito Vacío">
-          <p>Tu carrito está vacío</p>
-          <a href="Presentación.html" class="btn-explorar">Explorar cursos</a>
+    <div class="carrito-main-container">
+        <h2 class="carrito-title"><strong>Mi Carrito</strong></h2>
+        <div class="carrito-content">
+            <!-- Lista de cursos -->
+            <div class="carrito-lista">
+                <div id="cart-items"></div>
+            </div>
+            <!-- Resumen -->
+            <div class="carrito-resumen" id="cart-summary">
+                <h3>Resumen de la orden</h3>
+                <div class="resumen-detalles">
+                    <div class="resumen-linea">
+                        <span>Subtotal:</span>
+                        <span id="total-price">S/. 0.00</span>
+                    </div>
+                    <div class="resumen-linea">
+                        <span>Descuento:</span>
+                        <span id="discount-price">S/. 0.00</span>
+                    </div>
+                    <div class="resumen-linea total">
+                        <span>Total:</span>
+                        <span id="final-total">S/. 0.00</span>
+                    </div>
+                </div>
+                <button class="checkout-button" disabled>Proceder al pago</button>
+            </div>
         </div>
-      </div>
-
-      <div class="carrito-resumen">
-        <h3>Resumen de la orden</h3>
-        <div class="resumen-detalles">
-          <div class="resumen-linea">
-            <span>Subtotal:</span>
-            <span>S/. 0.00</span>
-          </div>
-          <div class="resumen-linea">
-            <span>Descuento:</span>
-            <span>S/. 0.00</span>
-          </div>
-          <div class="resumen-linea total">
-            <span>Total:</span>
-            <span>S/. 0.00</span>
-          </div>
-        </div>
-        <button class="btn-checkout" disabled>Proceder al pago</button>
-      </div>
     </div>
-  </section>
 
-  <footer>
-    <p>Hecho con amor para la humanidad. CodeTrail SAC TM CC</p>
-  </footer>
+    <!-- Modal Yape -->
+    <div id="yape-modal" class="yape-modal-bg" style="display:none;">
+        <div class="yape-modal">
+            <img src="images/logo_yape.png" alt="Yape" class="yape-logo">
+            <div class="yape-titulo">INTRODUZCA SU<br>CÓDIGO DE APROBACIÓN</div>
+            <form id="yape-form" autocomplete="off">
+                <input id="yape-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="yape-input" autofocus>
+                <div id="yape-x-row">
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                    <span class="yape-x">X</span>
+                </div>
+                <div id="yape-error" class="yape-error"></div>
+            </form>
+            <button id="yape-close" class="yape-close-btn">&times;</button>
+        </div>
+    </div>
 
-  <script src="header/header.js"></script>
+    <!-- Footer -->
+    <div class="footer">
+        <p>Hecho con ❤️ para la humanidad · © CodeTrail SAC</p>
+    </div>
+
+    <script src="header/header.js"></script>
+    <script src="js/cart.js"></script>
 </body>
-
 </html>
