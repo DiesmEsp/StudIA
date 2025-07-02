@@ -367,8 +367,9 @@ def obtener_detalle_curso(id):
         # Buscar datos del curso
         cursor.execute("""
             SELECT id, codigo, titulo, descripcion, nivel, duracion,
-                   precio, DATE(fecha_creacion) AS fecha_creacion,
-                   rating_promedio, activo
+                precio, DATE(fecha_creacion) AS fecha_creacion,
+                rating_promedio, activo,
+                silabo_url, contenido_url
             FROM cursos
             WHERE id = ?
         """, (id,))
@@ -411,6 +412,8 @@ def obtener_detalle_curso(id):
                 "fecha_creacion": curso["fecha_creacion"],
                 "rating_promedio": curso["rating_promedio"],
                 "activo": bool(curso["activo"]),
+                "silabo_url": curso["silabo_url"],
+                "contenido_url": curso["contenido_url"],
                 "temas": temas,
                 "comprado": comprado
             }
@@ -719,21 +722,27 @@ def agregar_curso():
     if not all(campo in data for campo in campos_requeridos):
         return jsonify({"success": False, "mensaje": "Faltan campos obligatorios"}), 400
 
+    # Campos opcionales
+    silabo_url = data.get("silabo_url", "")
+    contenido_url = data.get("contenido_url", "")
+
     try:
         conn = get_db_connection()
         cur = conn.cursor()
 
         # Obtener próximo ID
         cur.execute("SELECT seq + 1 FROM sqlite_sequence WHERE name = 'cursos'")
-        
         row = cur.fetchone()
         next_id = row[0] if row and row[0] is not None else 1
 
         codigo = f"C{next_id}"
 
         cur.execute("""
-            INSERT INTO cursos (codigo, titulo, descripcion, nivel, duracion, precio, rating_promedio)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO cursos (
+                codigo, titulo, descripcion, nivel, duracion,
+                precio, rating_promedio, silabo_url, contenido_url
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             codigo,
             data["titulo"],
@@ -741,7 +750,9 @@ def agregar_curso():
             data["nivel"],
             data["duracion"],
             data["precio"],
-            2.5  # Valor por defecto para nuevos cursos
+            2.5,
+            silabo_url,
+            contenido_url
         ))
 
         conn.commit()
@@ -767,8 +778,8 @@ def modificar_curso(curso_id):
         conn.close()
         return jsonify({"success": False, "mensaje": "El curso no existe"}), 404
 
-    # Campos permitidos a modificar
-    campos = ['titulo', 'descripcion', 'nivel', 'duracion', 'precio']
+    # Campos permitidos a modificar, incluyendo los nuevos
+    campos = ['titulo', 'descripcion', 'nivel', 'duracion', 'precio', 'silabo_url', 'contenido_url']
     actualizaciones = []
     valores = []
 
