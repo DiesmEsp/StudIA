@@ -1,121 +1,168 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuración común para todos los gráficos
+    const configComun = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    boxWidth: 12,
+                    font: {
+                        size: 10
+                    }
+                }
+            },
+            tooltip: {
+                bodyFont: {
+                    size: 10
+                },
+                titleFont: {
+                    size: 10
+                }
+            }
+        }
+    };
 
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Iniciando carga de estadísticas...');
+    // Función para obtener estadísticas desde la API
+    async function obtenerEstadisticas() {
+        try {
+            const response = await fetch('http://localhost:5000/api/admin/estadisticas');
+            if (!response.ok) {
+                throw new Error('Error al obtener estadísticas');
+            }
+            const data = await response.json();
 
-    // Verificar si los elementos canvas existen
-    const ctxCursos = document.getElementById('graficoCursos');
-    const ctxTemas = document.getElementById('graficoTemas');
-    const ctxCompras = document.getElementById('graficoCompras');
-
-    if (!ctxCursos || !ctxTemas || !ctxCompras) {
-        console.error('No se encontraron uno o más elementos canvas:', {
-            cursos: !!ctxCursos,
-            temas: !!ctxTemas,
-            compras: !!ctxCompras
-        });
-        return;
+            if (data.success) {
+                // Mostrar datos en los gráficos
+                crearGraficoCursos(data.data.cursos);
+                crearGraficoTemas(data.data.temas);
+                crearGraficoCompras(data.data.compras);
+            } else {
+                console.error('Error en la respuesta del servidor:', data.mensaje);
+            }
+        } catch (error) {
+            console.error('Error al obtener estadísticas:', error);
+        }
     }
 
-    try {
-        console.log('Realizando llamada a la API...');
-        const response = await fetch('http://localhost:5000/api/admin/estadisticas');
-        console.log('Respuesta recibida:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('Datos recibidos:', result);
-
-        if (!result.success) {
-            console.error('Error en la respuesta:', result.mensaje);
-            return;
-        }
-
-        const { cursos, temas, compras } = result.data;
-
-        // Verificar que los datos existen
-        console.log('Datos para gráficos:', {
-            cursos: cursos,
-            temas: temas,
-            compras: compras
-        });
-
-        // Gráfico de Cursos más Comprados
-        console.log('Creando gráfico de cursos...');
-        new Chart(ctxCursos, {
-            type: 'bar',
+    // Función para crear el gráfico de cursos más comprados
+    function crearGraficoCursos(datos) {
+        new Chart(document.getElementById('cursosChart'), {
+            type: 'pie',
             data: {
-                labels: cursos.labels,
+                labels: datos.labels,
                 datasets: [{
-                    label: 'Cursos más Comprados',
-                    data: cursos.data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    data: datos.data,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ],
                     borderWidth: 1
                 }]
             },
             options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
-
-        // Gráfico de Temas más Frecuentes
-        console.log('Creando gráfico de temas...');
-        new Chart(ctxTemas, {
-            type: 'pie',
-            data: {
-                labels: temas.labels,
-                datasets: [{
-                    data: temas.data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(153, 102, 255, 0.5)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
+                ...configComun,
                 plugins: {
-                    legend: {
-                        position: 'right'
-                    },
                     title: {
                         display: true,
-                        text: 'Distribución de Temas'
+                        text: '3 cursos más comprados',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    ...configComun.plugins,
+                    tooltip: {
+                        ...configComun.plugins.tooltip,
+
                     }
                 }
             }
         });
+    }
 
-        // Gráfico de Compras por Mes
-        console.log('Creando gráfico de compras...');
-        new Chart(ctxCompras, {
-            type: 'line',
+
+    // Gráfico de barras compacto
+    function crearGraficoTemas(datos) {
+        new Chart(document.getElementById('temasChart'), {
+            type: 'bar',
             data: {
-                labels: compras.labels,
+                labels: datos.labels,
                 datasets: [{
-                    label: 'Compras por Mes',
-                    data: compras.data,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
+                    label: 'Cursos',
+                    data: datos.data,
+                    backgroundColor: '#36A2EB',
+                    borderWidth: 1
                 }]
             },
             options: {
+                indexAxis: 'y',
+                ...configComun,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: {
+                                size: 9
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 9
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '5 temas más utilizados',
+                        font: {
+                            size: 16
+                        }
+                    },
+
+                    ...configComun.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+
+    // Función para crear el gráfico de compras por mes
+    function crearGraficoCompras(datos) {
+        const ctx = document.getElementById('comprasChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: datos.labels,
+                datasets: [{
+                    label: 'Compras por mes',
+                    data: datos.data,
+                    fill: false,
+                    backgroundColor: 'rgba(7z5, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    tension: 0.1,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+
                 responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Compras en los últimos 6 meses',
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -126,10 +173,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             }
         });
-
-        console.log('Todos los gráficos creados exitosamente');
-
-    } catch (error) {
-        console.error('Error al cargar las estadísticas:', error);
     }
+
+    // Llamar a la función para obtener estadísticas cuando la página cargue
+    obtenerEstadisticas();
 });

@@ -510,18 +510,14 @@ main {
     color: #333;
 }
 
-.graficos-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+.chart-container {
+    width: 80%;
+    margin: 20px auto;
     padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-
-.grafico {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+h1 {
+    text-align: center;
+    color: #333;
 }
-
 
