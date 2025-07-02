@@ -254,7 +254,7 @@ def login():
 
 # === Endpoint para registrar un nuevo usuario ===
 @app.route("/api/registro", methods=["POST"])
-def registrar_usuario():
+def regisxtrar_usuario():
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
