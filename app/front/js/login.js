@@ -21,19 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
             if (res.ok && data.success) {
                 console.log("Inicio de sesión exitoso:", data);
 
-                // Guardar datos en localStorage
+                // Guardar datos en localStorage (incluyendo el rol)
                 localStorage.setItem("usuario", JSON.stringify({
                     id: data.user_id,
-                    nombre: data.nombre
+                    nombre: data.nombre,
+                    rol: data.rol
                 }));
 
                 // Mostrar mensaje de éxito
                 alert("Inicio de sesión exitoso. Bienvenido!");
 
-                // Redirigir al inicio
-                window.location.href = "/index.html";
+                // Redirigir según el rol
+                if (data.rol === "admin") {
+                    window.location.href = "/MenuDashboradAdmin.html";
+                } else {
+                    window.location.href = "/index.html";
+                }
+
             } else {
-                // Mostrar mensaje del backend
                 console.error("Error de inicio de sesión:", data);
                 alert(data.mensaje || "Error al iniciar sesión.");
             }

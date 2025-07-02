@@ -241,7 +241,8 @@ def login():
         return jsonify({
             "success": True,
             "user_id": user["id"],
-            "nombre": user["nombre"]
+            "nombre": user["nombre"],
+            "rol": user["rol"]  # 👈 Agregado para que el frontend lo sepa
         })
 
     except Exception as e:
