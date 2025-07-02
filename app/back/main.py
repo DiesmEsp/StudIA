@@ -213,6 +213,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 # === Endpoint para gestionar el login ===
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -249,9 +250,12 @@ def login():
         print("[Error en login]:", str(e))
         return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
 
+
+
+
 # === Endpoint para registrar un nuevo usuario ===
 @app.route("/api/registro", methods=["POST"])
-def registrar_usuario():
+def regisxtrar_usuario():
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
